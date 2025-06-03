@@ -1,0 +1,159 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 80%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #005A9C; /* University blue */
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    width: 100px;
+    height: auto;
+}
+
+.school-address {
+    text-align: center;
+    flex-grow: 1;
+    padding: 0 20px;
+}
+
+.school-address h2 {
+    margin: 0 0 5px 0;
+    color: #005A9C; /* University blue */
+    font-size: 1.8em;
+}
+
+.school-address p {
+    margin: 3px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.passport-container img {
+    width: 120px;
+    height: 150px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+}
+
+.details-section, .table-section, .certification-section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.details-section h2, .table-section h2, .certification-section h2 {
+    color: #005A9C; /* University blue */
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 10px;
+}
+
+.personal-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.course-details-grid {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.detail-item {
+    padding: 8px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 3px;
+}
+
+.detail-item .detail-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.detail-full-width {
+    grid-column: 1 / -1; /* Make item span all columns */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+table th {
+    background-color: #007BFF; /* A slightly lighter blue for table headers */
+    color: white;
+    font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.certification-section p {
+    margin-bottom: 10px;
+}
+
+.certification-status {
+    display: flex;
+    align-items: center;
+}
+
+.certification-status input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+}
+
+.signature-line {
+    margin-top: 30px;
+    font-style: italic;
+    color: #555;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #777;
+}
