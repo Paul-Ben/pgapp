@@ -12,6 +12,7 @@ use App\Http\Controllers\PgApplicationController;
 Route::get('/', [PgApplicationController::class, 'verify'])->name('applicant.verify');
 Route::post('/applicant/verify', [PgApplicationController::class, 'verifyApplicant'])->name('applicant.verify.submit');
 Route::get('/applicant/{appno}', [PgApplicationController::class,'index'])->name('application.index');
+// Route::get('/programme-info/{code}', [PgApplicationController::class, 'getProgrammeInfo']);
 Route::put('/applicant/{appno}', [PgApplicationController::class,'update'])->name('application.update');
 Route::get('/referees/{appno}', [PgApplicationController::class, 'refreeDataForm'])->name('referees.form');
 Route::post('/referees', [PgApplicationController::class, 'store'])->name('referees.store');
@@ -29,7 +30,7 @@ Route::put('/applicant-uploads/{applicants_id}', [PgApplicationController::class
 Route::get('/applicant-report/{applicant_id}', [PgApplicationController::class, 'view_report'])->name('report.view');
 
 Route::get('/pre_submission/{applicant_id}',   [PgApplicationController::class, 'presubmission'])->name('presubmission');
-Route::put('/pre_submission/{applicant_id}', [PgApplicationController::class, 'updatePresubmission'])->name('presubmission.update');
+Route::put('/pre_submission/{applicant_id}/submit', [PgApplicationController::class, 'updatePresubmission'])->name('presubmission.update');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');

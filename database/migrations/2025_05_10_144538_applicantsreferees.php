@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('date_commented')->nullable();
             $table->boolean('recommendation_status')->nullable();
             $table->boolean('mail_sent')->nullable();
+            $table->boolean('responded')->default(false);
             $table->timestamps(); 
 
             // Define foreign key relationship if 'applicants_id' references another table (e.g., applicants)

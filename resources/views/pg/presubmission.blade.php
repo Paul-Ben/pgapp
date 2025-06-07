@@ -162,29 +162,40 @@
                         <select name="first_choice" class="form-control" id="">
                             <option value="{{ $applicant->first_choice }}" selected>{{ $applicant->first_choice }}</option>
                             @foreach ($programmes as  $programme  )
-                                <option value="{{ $programme->code }}">{{ $programme->name }}</option>
+                                <option value="{{ $programme->name }}">{{ $programme->name }}</option>
                                 
                             @endforeach
                         </select>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Department:</span>
-                        <input type="text" name="department" value="Computer Science" class="form-control">
+                        <select name="department" class="form-control">
+                            <option value="{{ $applicant->department }}" selected>{{ $applicant->department }}</option>
+                            @foreach ($departments as $department)
+                                <option value="{{ $department->name }}">{{ $department->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Faculty:</span>
-                        <input type="text" name="faculty" value="Science and Technology" class="form-control">
+                        <select name="faculty" class="form-control">
+                            <option value="{{ $applicant->faculty }}" selected>{{ $applicant->faculty }}</option>
+                            @foreach ($faculties as $faculty)
+                                <option value="{{ $faculty->name }}">{{ $faculty->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Session:</span>
-                        <input type="text" name="session" value="2024/2025" class="form-control">
+                        <input type="text" name="sessions" value="{{$applicant->sessions}}" class="form-control" readonly>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-label">Programme:</span>
-                        <select name="programme" class="form-control">
+                        <span class="detail-label">Highest Qualification:</span>
+                        <select name="qualification" class="form-control">
                             <option value="Undergraduate (BSc)" selected>Undergraduate (BSc)</option>
+                            <option value="Postgraduate Diploma (PGD)">Postgraduate Diploma (PGD)</option>
                             <option value="Postgraduate (MSc)">Postgraduate (MSc)</option>
-                            <option value="PhD">PhD</option>
+                            <option value="Postgraduate (PhD)">Postgraduate (PhD)</option>
                         </select>
                     </div>
                 </div>
@@ -276,19 +287,7 @@
                 </div>
 
             </section>
-            {{-- <section class="certification-section mb-4">
-                <h2>Credentials Submission</h2>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="credentialsSubmitted" name="credentialsSubmitted" checked>
-                    <label class="form-check-label" for="credentialsSubmitted">
-                        I hereby certify that all required credentials have been submitted and are true to the best of my knowledge.
-                    </label>
-                </div>
-                <div class="mt-3">
-                    <label>Digital Signature</label>
-                    <input type="text" name="digital_signature" class="form-control" placeholder="Type your full name as digital signature">
-                </div>
-            </section> --}}
+           
 
             <footer class="mt-4">
                 <p>&copy; 2024 MOAUM. All rights reserved.</p>

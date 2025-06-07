@@ -60,11 +60,11 @@
         <section class="details-section">
             <h2>Course Details</h2>
             <div class="details-grid course-details-grid">
-                <div class="detail-item"><span class="detail-label">Course Applied:</span> Computer Science</div>
-                <div class="detail-item"><span class="detail-label">Department:</span> Computer Science</div>
-                <div class="detail-item"><span class="detail-label">Faculty:</span> Science and Technology</div>
-                <div class="detail-item"><span class="detail-label">Session:</span> 2024/2025</div>
-                <div class="detail-item"><span class="detail-label">Programme:</span> Undergraduate (BSc)</div>
+                <div class="detail-item"><span class="detail-label">Course Applied:</span> {{$applicant->first_choice}}</div>
+                <div class="detail-item"><span class="detail-label">Department:</span> {{$applicant->department}}</div>
+                <div class="detail-item"><span class="detail-label">Faculty:</span> {{$applicant->faculty}}</div>
+                <div class="detail-item"><span class="detail-label">Session:</span>{{$applicant->sessions}}</div>
+                <div class="detail-item"><span class="detail-label">Highest Qualification:</span> {{$applicant->qualification}}</div>
             </div>
         </section>
 

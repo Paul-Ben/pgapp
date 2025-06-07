@@ -33,11 +33,11 @@ return new class extends Migration
             $table->string('status', 20)->nullable();
             $table->string('qualification', 20)->nullable();
             $table->string('sessions', 10)->nullable();
-            $table->boolean('refereers_needed')->default(false);
+            $table->string('refereers_needed')->default(2);
             $table->boolean('ref_completion_status')->default(false);
-            $table->string('first_choice', 10)->nullable();
-            $table->string('second_choice', 10)->nullable();
-            $table->string('password', 45)->nullable();
+            $table->string('first_choice', 45)->nullable();
+            $table->string('faculty', 45)->nullable();
+            $table->string('department', 45)->nullable();
             $table->unsignedInteger('next_stage')->default(1);
             $table->boolean('is_verified')->default(false);
             $table->timestamps(); 

@@ -168,14 +168,14 @@
                                         </button>
                                     </div> --}}
                                     <div class="button login button-1 text-center">
-                                        <a href="{{ url()->previous() }}">
+                                        {{-- <a href="{{ url()->previous() }}">
                                             <button class="btn btn-success" type="button" style="background: blue"
                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Go back to the previous step.">
                                                 <i class="fa fa-arrow-left"></i>
                                                 <span>Previous</span>
                                             </button>
-                                        </a>
+                                        </a> --}}
                                         <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip"
                                             data-bs-placement="top" title="Save all entered institution details.">
                                             <span>Save</span>
