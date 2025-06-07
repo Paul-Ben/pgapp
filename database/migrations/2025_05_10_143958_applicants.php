@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applicants', function (Blueprint $table) {
-            $table->string('appno', 20)->primary();
+            $table->id();
+            $table->string('appno', 20)->unique();
             $table->string('application_type', 50)->nullable();
             $table->string('school_id', 5)->nullable();
             $table->string('fullname', 75)->nullable();
@@ -31,13 +32,14 @@ return new class extends Migration
             $table->dateTime('date_completed')->nullable();
             $table->string('status', 20)->nullable();
             $table->string('qualification', 20)->nullable();
-            $table->string('session', 10)->nullable();
+            $table->string('sessions', 10)->nullable();
             $table->boolean('refereers_needed')->default(false);
             $table->boolean('ref_completion_status')->default(false);
             $table->string('first_choice', 10)->nullable();
             $table->string('second_choice', 10)->nullable();
             $table->string('password', 45)->nullable();
             $table->unsignedInteger('next_stage')->default(1);
+            $table->boolean('is_verified')->default(false);
             $table->timestamps(); 
         });
     }

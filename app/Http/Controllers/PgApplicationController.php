@@ -6,14 +6,21 @@ use App\Mail\RefereeNotificationMail;
 use App\Models\Applicant;
 use App\Models\ApplicantInstitutionDetail;
 use App\Models\ApplicantsReferee;
+use App\Models\Programme;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PgApplicationController extends Controller
 {
+    public function verify()
+    {
+        return view('pg.verify');
+    }
     public function index($appno)
     {
         $applicant = Applicant::where('appno', $appno)->first();
@@ -27,7 +34,12 @@ class PgApplicationController extends Controller
                 ->with('success', 'Application already completed.');
         }
 
-        return view("pg.index", ['applicant' => $applicant]);
+        // Get all programmes
+        $programmes = Programme::all('name', 'code');
+       
+
+        return view("pg.index", ['applicant' => $applicant
+            , 'programmes' => $programmes]);
     }
 
     /**
@@ -36,14 +48,15 @@ class PgApplicationController extends Controller
     public function update(Request $request, $appno)
     {
         $applicant = Applicant::where('appno', $appno)->first();
-        // dd($applicant);
+      
         if ($applicant->status == 'Completed') {
             return view('pg.applicationsubmitted', compact('applicant'))
                 ->with('success', 'Application already completed.');
         }
         // Validate the incoming request data
         $validated = $request->validate([
-            'application_type' => 'nullable|string|max:50',
+            'qualification' => 'nullable|string|max:50',
+            'first_choice' => 'nullable|string|max:50',
             'fullname' => 'nullable|string|max:75',
             'email_address' => 'nullable|email|max:21',
             'sex' => 'nullable|string|max:6',
@@ -85,10 +98,10 @@ class PgApplicationController extends Controller
         $applicant_id = $request->applicants_id;
         $applicant = Applicant::where('appno', $applicant_id)->first();
 
-        if ($applicant->status == 'Completed') {
-            return view('pg.applicationsubmitted', compact('applicant'))
-                ->with('success', 'Application already completed.');
-        }
+        // if ($applicant->status == 'Completed') {
+        //     return view('pg.applicationsubmitted', compact('applicant'))
+        //         ->with('success', 'Application already completed.');
+        // }
 
         $validated = $request->validate([
             'applicants_id' => 'required|string|max:14',
@@ -136,9 +149,11 @@ class PgApplicationController extends Controller
         $referees = DB::table('applicantsReferees')
             ->where('applicants_id', $applicant_id)
             ->get();
-        return view('pg.presubmission', compact('applicant', 'institutionDetails', 'referees', 'credentials'));
+        $programmes = DB::table('programmes')
+            ->select('name', 'code')
+            ->get();
+        return view('pg.presubmission', compact('applicant', 'institutionDetails', 'referees', 'credentials', 'programmes'));
 
-        // return view('pg.report');
     }
 
     public function get_institute_details($appno)
@@ -222,7 +237,6 @@ class PgApplicationController extends Controller
             ->select('credentials', 'passport')
             ->first();
 
-        // dd($credentials);
         return view('pg.applicant_uploads', compact('applicants_id', 'credentials'));
     }
 
@@ -291,15 +305,6 @@ class PgApplicationController extends Controller
         $refereesmail = DB::table('applicantsreferees')
             ->where('applicants_id', $applicant_id)
             ->get('mail_sent');
-        // Check if all referees have been notified
-        // $allRefereesNotified = $refereesmail->every(function ($referee) {
-        //     return $referee->mail_sent == 1;
-        // });
-        // if ($refereesmail) {
-        //     return view('pg.applicationsubmitted', ['applicant_id' => $applicant_id])
-        //         ->with('success', 'Application already completed.');
-        // }
-
 
         $applicant = DB::table('applicants')
             ->where('appno', $applicant_id)
@@ -313,6 +318,8 @@ class PgApplicationController extends Controller
             ->where('applicants_id', $applicant_id)
             ->get();
 
+        
+        // dd($programmes);
         return view('pg.presubmission', compact('applicant', 'institutionDetails', 'referees'));
     }
     // public function updatep(Request $request, $applicant_id)
@@ -462,5 +469,87 @@ class PgApplicationController extends Controller
 
         return view('pg.thankyou', ['applicant' => $applicant])
             ->with('success', 'Referee submission updated successfully.');
+    }
+
+    public function verifyApplicant(Request $request)
+    {
+        // Validate the input
+        $request->validate([
+            'matno' => 'required|string|max:20'
+        ]);
+
+        // check if the mat no is already in the database
+        $existingApplicant = Applicant::where('appno', $request->input('matno'))->first();
+        if ($existingApplicant) {
+            // If the applicant already exists, redirect to the application index
+            return redirect()->route('application.index', ['appno' => $existingApplicant->appno])
+                ->with('success', 'Application data retrieved successfully');
+        }
+
+        $matno = $request->input('matno');
+
+        try {
+            // Make the API request to the external portal
+            $response = Http::get('https://portal.bsum.edu.ng/application/Application', [
+                'matno' => $matno
+            ]);
+
+            // Check if the request was successful
+            if ($response->successful()) {
+                $data = $response->json(); 
+                
+                $applicant = Applicant::updateOrCreate(
+                    ['appno' => $matno], // Search criteria
+                    [
+                        'appno' => $matno, // Store the entire JSON response
+                        'fullname' => $data['fullName'] ?? null,
+                        'sessions' => $data['sessions'] ?? null,
+                        'school_id' => $data['schoolId'] ?? null,
+                        'application_type' => $data['applicationType'] ?? null,
+                        'is_verified' => $data['paymentStatus'] ?? null,
+                        'refereers_needed' => 2,
+                    ]
+                );
+
+                $appno = $applicant->appno;
+                // Redirect to application route with matno parameter
+                return redirect()->route('application.index', ['appno' => $appno])
+                    ->with('success', 'Application data retrieved successfully');
+            } else {
+                // Handle API error
+                $errorMessage = "Failed to retrieve application data. Status: " . $response->status();
+                Log::error($errorMessage);
+                return back()->with('error', $errorMessage);
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions
+            Log::error("Error verifying application: " . $e->getMessage());
+            return back()->with('error', 'An error occurred while processing your request');
+        }
+    }
+    public function programmeForm($appno)
+    {
+        $applicant = Applicant::where('appno', $appno)->first();
+        if (!$applicant) {
+            return redirect()->back()->with('error', 'Applicant not found.');
+        }
+        return view('pg.choose_program', compact('applicant'));
+    }
+    public function store_program(Request $request, $appno)
+    {
+        $request->validate([
+            'program' => 'required|string|max:100',
+        ]);
+
+        $applicant = Applicant::where('appno', $appno)->first();
+        if (!$applicant) {
+            return redirect()->back()->with('error', 'Applicant not found.');
+        }
+
+        // Update the applicant's program
+        $applicant->update(['program' => $request->program]);
+
+        return redirect()->route('institution_details.form', $appno)
+            ->with('success', 'Program selected successfully.');
     }
 }

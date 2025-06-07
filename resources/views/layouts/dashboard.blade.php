@@ -10,10 +10,13 @@
     <meta name="keywords"
         content="admin template, Voxo admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="pixelstrap">
-    <link rel="icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
-    <title>Voxo - Order List</title>
-
+    {{-- <link rel="icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon"> --}}
+    <title>PG Applications</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
+    <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
     <!-- Google font-->
     <link
         href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"
@@ -59,8 +62,8 @@
             <div class="header-wrapper row m-0">
                 <div class="header-logo-wrapper col-auto p-0">
                     <div class="logo-wrapper"><a href="index.html">
-                            <img class="img-fluid main-logo" src="assets/images/logo/logo.png" alt="logo">
-                            <img class="img-fluid white-logo" src="assets/images/logo/logo-white.png" alt="logo">
+                            <img class="img-fluid main-logo" src="{{asset('BSULOGO3.png')}}" alt="logo">
+                            <img class="img-fluid white-logo" src="{{asset('BSULOGO3.png')}}" alt="logo">
                         </a>
                     </div>
 
@@ -86,7 +89,7 @@
                 </form>
                 <div class="nav-right col-4 pull-right right-header p-0">
                     <ul class="nav-menus">
-                        <li>
+                        {{-- <li>
                             <span class="header-search">
                                 <span class="lnr lnr-magnifier"></span>
                             </span>
@@ -191,15 +194,15 @@
                             <a class="text-dark" href="javascript:void(0)" onclick="javascript:toggleFullScreen()">
                                 <span class="lnr lnr-frame-expand"></span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="profile-nav onhover-dropdown pe-0 me-0">
                             <div class="media profile-media">
-                                <img class="user-profile rounded-circle" src="assets/images/users/4.jpg"
-                                    alt="profile-picture">
-                                <div class="user-name-hide media-body">
+                                <img class="user-profile rounded-circle" src="{{asset('BSULOGO3.png')}}"
+                                    alt="profile-picture" width="50px" height="50px">
+                                {{-- <div class="user-name-hide media-body">
                                     <span>Emay Walter</span>
                                     <p class="mb-0 font-roboto">Admin <i class="middle fa fa-angle-down"></i></p>
-                                </div>
+                                </div> --}}
                             </div>
                             <ul class="profile-dropdown onhover-show-div">
                                 <li>
@@ -248,7 +251,7 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="index.html" data-bs-original-title="" title="">
-                            <img class="img-fluid for-dark" src="assets/images/logo/logo-white.png" alt="">
+                            <img class="img-fluid for-dark" src="{{asset('BSULOGO3.png')}}" alt="" width="100px" height="100px">
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>
@@ -1038,7 +1041,7 @@
                     <footer class="footer">
                         <div class="row">
                             <div class="col-md-12 footer-copyright text-center">
-                                <p class="mb-0">Copyright 2021 © Voxo theme by pixelstrap</p>
+                                <p class="mb-0">Copyright 2025 © MOAUM.</p>
                             </div>
                         </div>
                     </footer>

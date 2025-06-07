@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+{{-- @extends('layouts.dashboard')
 @section('content')
     <div class="title-header">
         <h5>Bio Data</h5>
@@ -19,22 +19,24 @@
                                     @method('PUT')
                                     <div class="row">
                                         <div class="mb-4 row align-items-center">
-                                            <label class="form-label-title col-sm-2 mb-4">
-                                                Application No</label>
+                                            <label class="form-label-title col-sm-2 mb-4">Course of Study:</label>
                                             <div class="col-sm-4 mb-4">
-                                                <input class="form-control" value="{{ $applicant['appno'] }}" type="text"
-                                                    placeholder="Product Name" readonly>
-                                                <input class="form-control" value="{{ $applicant['appno'] }}" type="text"
-                                                    hidden name="appno">
+                                                <select name="first_choice" class="form-control" required>
+                                                    <option value="" disabled>Select Program</option>
+                                                    @foreach( $programmes as $programme)
+                                                        <option value="{{ $programme->code }}">
+                                                            {{ $programme->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Application
-                                                Type</label>
+                                            <label class="form-label-title col-sm-2 mb-4">Highest Qualification:</label>
                                             <div class="col-sm-4 mb-4">
-                                                <select class="js-example-basic-single w-100" name="application_type">
-                                                    <option disabled>{{ $applicant['application_type'] ?? '' }}</option>
-                                                    <option value="Postgraduate">Postgraduate</option>
-                                                    <option value="Others">Others</option>
+                                                <select name="qualification" class="form-control" required>
+                                                    <option value="" disabled>Select Program</option>
+                                                    <option value="Undergraduate (BSc)">Undergraduate (BSc)</option>
+                                                    <option value="Undergraduate (BSc)">Postgraduate Diploma (PGD)</option>
+                                                    <option value="Postgraduate (MSc)">Postgraduate (MSc)</option>
+                                                    <option value="Postgraduate (PhD)">Postgraduate (PhD)</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -45,6 +47,8 @@
                                                 <input class="form-control" name="fullname"
                                                     value="{{ $applicant['fullname'] ?? '' }}" type="text"
                                                     placeholder="Full Name">
+                                                    <input class="form-control" value="{{ $applicant['appno'] }}" type="text"
+                                                    hidden name="appno">
                                             </div>
 
                                             <label class="form-label-title col-sm-2 mb-4">
@@ -79,7 +83,7 @@
                                                     required>
                                                     <option value="{{ $applicant['country'] }}" selected='selected'>
                                                         {{ $applicant['country'] ?? '' }}</option>
-                                                        <option value="Other">Other</option>
+                                                    <option value="Other">Other</option>
                                                 </select>
                                             </div>
                                             <label class="col-sm-2 mb-4 col-form-label form-label-title">State</label>
@@ -88,7 +92,7 @@
                                                     id="state" onchange="selectLGA(this)" required>
                                                     <option value="{{ $applicant['state_of_origin'] }}" selected='selected'>
                                                         {{ $applicant['state_of_origin'] ?? '' }}</option>
-                                                        <option value="Other">Other</option>
+                                                    <option value="Other">Other</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -129,17 +133,13 @@
                                                 <span>Save</span>
                                                 <i class="fa fa-check"></i>
                                             </button>
-                                            {{-- <a href="{{ route('institution_details.form', $applicant['appno']) }}">
-                                                <button class="btn btn-success" type="button" style="background: blue">
-                                                    <span>Next</span>
-                                                    <i class="fa fa-arrow-right"></i>
-                                                </button>
-                                            </a> --}}
+                                          
 
                                         </div>
 
 
                                     </div>
+                                    
                                 </form>
                             </div>
                         </div>
@@ -158,7 +158,8 @@
                 .then(data => {
                     const countrySelect = document.getElementById('country');
 
-                    data.sort((a, b) => a.name.common.localeCompare(b.name.common)); // Sort countries alphabetically
+                    data.sort((a, b) => a.name.common.localeCompare(b.name
+                        .common)); // Sort countries alphabetically
                     // Loop through the data and create option elements
                     data.forEach(country => {
                         const option = document.createElement('option');
@@ -175,7 +176,7 @@
                 });
         });
     </script>
-    
+
     <script>
         //Fetch all States
         fetch('https://nga-states-lga.onrender.com/fetch')
@@ -197,6 +198,235 @@
                 .then((data) => {
                     var x = document.getElementById("lga");
 
+                    var select = document.getElementById("lga");
+                    var length = select.options.length;
+                    for (i = length - 1; i >= 0; i--) {
+                        select.options[i] = null;
+                    }
+                    for (let index = 0; index < Object.keys(data).length; index++) {
+                        var option = document.createElement("option");
+                        option.text = data[index];
+                        option.value = data[index];
+                        x.add(option);
+                    }
+                });
+        }
+    </script>
+@endsection --}}
+@extends('layouts.dashboard')
+
+@section('content')
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Personal Information Section -->
+                                <div class="card-header-2 mb-4">
+                                    <h5>Personal Information</h5>
+                                </div>
+                                <form method="POST" action="{{ route('application.update', $applicant['appno']) }}" class="theme-form theme-form-2 mega-form">
+                                    @csrf
+                                    @method('PUT')
+                                    
+                                    <input type="hidden" name="appno" value="{{ $applicant['appno'] }}">
+
+                                    <div class="row">
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="form-label-title col-sm-2 mb-4">Full Name</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input class="form-control" name="fullname" value="{{ $applicant['fullname'] ?? '' }}" type="text" placeholder="Full Name" required>
+                                            </div>
+
+                                            <label class="form-label-title col-sm-2 mb-4">Email Address</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input class="form-control" value="{{ $applicant['email_address'] ?? '' }}" name="email_address" type="email" placeholder="Email Address" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Gender</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select class="js-example-basic-single w-100" name="sex" required>
+                                                    <option value="{{ $applicant['sex'] }}" selected='selected'>{{ $applicant['sex'] ?? '' }}</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                            </div>
+
+                                            <label class="col-lg-2 col-md-3 mb-4 col-form-label form-label-title">Date Of Birth</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input class="form-control" value="{{ $applicant['date_of_birth'] ?? '' }}" name="date_of_birth" type="date" placeholder="Date Of Birth" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4 row align-items-center nigeriaFields">
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Country</label>
+                                            <div class="col-sm-4 mb-4" id="internationalFields" style="display: none;">
+                                                <select class="js-example-basic-single w-100" name="country" id="country" required>
+                                                    <option value="{{ $applicant['country'] }}" selected='selected'>{{ $applicant['country'] ?? '' }}</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">State</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select class="js-example-basic-single w-100" name="state_of_origin" id="state" onchange="selectLGA(this)" required>
+                                                    <option value="{{ $applicant['state_of_origin'] }}" selected='selected'>{{ $applicant['state_of_origin'] ?? '' }}</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">LGA</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select class="js-example-basic-single w-100" name="lga" id="lga" required>
+                                                    <option disabled>LGA Menu</option>
+                                                    <option value="{{ $applicant['lga'] }}" selected='selected'>{{ $applicant['lga'] ?? '' }}</option>
+                                                </select>
+                                            </div>
+
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Home Town</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input class="form-control" value="{{ $applicant->home_town }}" name="home_town" type="text" placeholder="Home Town">
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Address</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input class="form-control" value="{{ $applicant['contact_address'] ?? '' }}" name="contact_address" type="text" placeholder="Address" required>
+                                            </div>
+
+                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Phone Number</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input class="form-control" value="{{ $applicant['phone_no'] ?? '' }}" name="phone_no" type="text" placeholder="Phone Number" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Choice of Course Section -->
+                                    <div class="card-header-2 mb-4 mt-5">
+                                        <h5>Choice of Course</h5>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="form-label-title col-sm-2 mb-4">Course of Study</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select name="first_choice" class="form-control" required>
+                                                    <option value="" disabled selected>Select Program</option>
+                                                    @foreach($programmes as $programme)
+                                                        <option value="{{ $programme->code }}" {{ $applicant['first_choice'] == $programme->code ? 'selected' : '' }}>
+                                                            {{ $programme->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            
+                                            <label class="form-label-title col-sm-2 mb-4">Department</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select name="department" class="form-control" >
+                                                    <option value="" disabled selected>Select Department</option>
+                                                    {{-- @foreach($departments as $department)
+                                                        <option value="{{ $department->name }}" {{ $applicant['department'] == $department->name ? 'selected' : '' }}>
+                                                            {{ $department->name }}
+                                                        </option>
+                                                    @endforeach --}}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="form-label-title col-sm-2 mb-4">Faculty</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select name="faculty" class="form-control" >
+                                                    <option value="" disabled selected>Select Faculty</option>
+                                                    {{-- @foreach($faculties as $faculty)
+                                                        <option value="{{ $faculty->name }}" {{ $applicant['faculty'] == $faculty->name ? 'selected' : '' }}>
+                                                            {{ $faculty->name }}
+                                                        </option>
+                                                    @endforeach --}}
+                                                </select>
+                                            </div>
+                                            
+                                            <label class="form-label-title col-sm-2 mb-4">Session</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <input type="text" name="sessions" value="{{ $applicant['sessions'] ?? '' }}" class="form-control" id="" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4 row align-items-center">
+                                            <label class="form-label-title col-sm-2 mb-4">Highest Qualification</label>
+                                            <div class="col-sm-4 mb-4">
+                                                <select name="qualification" class="form-control" required>
+                                                    <option value="" disabled selected>Select Qualification</option>
+                                                    <option value="Undergraduate (BSc)" {{ $applicant['qualification'] == 'Undergraduate (BSc)' ? 'selected' : '' }}>Undergraduate (BSc)</option>
+                                                    <option value="Postgraduate Diploma (PGD)" {{ $applicant['qualification'] == 'Postgraduate Diploma (PGD)' ? 'selected' : '' }}>Postgraduate Diploma (PGD)</option>
+                                                    <option value="Postgraduate (MSc)" {{ $applicant['qualification'] == 'Postgraduate (MSc)' ? 'selected' : '' }}>Postgraduate (MSc)</option>
+                                                    <option value="Postgraduate (PhD)" {{ $applicant['qualification'] == 'Postgraduate (PhD)' ? 'selected' : '' }}>Postgraduate (PhD)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="button login button-1 text-center mt-4">
+                                        <button class="btn btn-primary" type="submit">
+                                            <span>Save</span>
+                                            <i class="fa fa-check"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript remains the same -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://restcountries.com/v3.1/all')
+                .then(response => response.json())
+                .then(data => {
+                    const countrySelect = document.getElementById('country');
+                    data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+                    data.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.name.common;
+                        option.textContent = country.name.common;
+                        countrySelect.appendChild(option);
+                    });
+                    document.getElementById('internationalFields').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error fetching country data:', error);
+                });
+        });
+
+        fetch('https://nga-states-lga.onrender.com/fetch')
+            .then((res) => res.json())
+            .then((data) => {
+                var x = document.getElementById("state");
+                for (let index = 0; index < Object.keys(data).length; index++) {
+                    var option = document.createElement("option");
+                    option.text = data[index];
+                    option.value = data[index];
+                    x.add(option);
+                }
+            });
+
+        function selectLGA(target) {
+            var state = target.value;
+            fetch('https://nga-states-lga.onrender.com/?state=' + state)
+                .then((res) => res.json())
+                .then((data) => {
+                    var x = document.getElementById("lga");
                     var select = document.getElementById("lga");
                     var length = select.options.length;
                     for (i = length - 1; i >= 0; i--) {

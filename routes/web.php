@@ -5,16 +5,20 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PgApplicationController;
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
+// Verification and application routes
+Route::get('/', [PgApplicationController::class, 'verify'])->name('applicant.verify');
+Route::post('/applicant/verify', [PgApplicationController::class, 'verifyApplicant'])->name('applicant.verify.submit');
 Route::get('/applicant/{appno}', [PgApplicationController::class,'index'])->name('application.index');
 Route::put('/applicant/{appno}', [PgApplicationController::class,'update'])->name('application.update');
 Route::get('/referees/{appno}', [PgApplicationController::class, 'refreeDataForm'])->name('referees.form');
 Route::post('/referees', [PgApplicationController::class, 'store'])->name('referees.store');
 Route::get('/referee-report/{referee}', [PgApplicationController::class, 'refereeSubmission'])->name('referee.submissionForm');
 Route::put('/referee-report/{applicants_id}', [PgApplicationController::class, 'storeRefereeSubmission'])->name('referee.submission.store');
+Route::get('/applicant/{appno}/programme', [PgApplicationController::class, 'programmeForm'])->name('programme.form');
+Route::post('/applicant/programme', [PgApplicationController::class, 'storeProgramme'])->name('programme.store');
 
 Route::get('/institution-details/{appno}', [PgApplicationController::class, 'get_institute_details'])->name('institution_details.form');
 Route::post('/institution-details', [PgApplicationController::class, 'store_institution_details'])->name('institution_details.store');

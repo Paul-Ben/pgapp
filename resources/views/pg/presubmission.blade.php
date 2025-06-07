@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Student Application Profile</title>
+     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
+    <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
+    <title>PG Application</title>
     <link rel="stylesheet" href="{{ asset('report/style.css') }}">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -154,7 +158,14 @@
                 <div class="details-grid course-details-grid">
                     <div class="detail-item">
                         <span class="detail-label">Course Applied:</span>
-                        <input type="text" name="course_applied" value="Computer Science" class="form-control">
+                        {{-- <input type="text" name="course_applied" value="Computer Science" class="form-control"> --}}
+                        <select name="first_choice" class="form-control" id="">
+                            <option value="{{ $applicant->first_choice }}" selected>{{ $applicant->first_choice }}</option>
+                            @foreach ($programmes as  $programme  )
+                                <option value="{{ $programme->code }}">{{ $programme->name }}</option>
+                                
+                            @endforeach
+                        </select>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Department:</span>
