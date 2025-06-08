@@ -1,218 +1,3 @@
-{{-- @extends('layouts.dashboard')
-@section('content')
-    <div class="title-header">
-        <h5>Bio Data</h5>
-    </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="card-header-2">
-                                    <h5>Personal Information</h5>
-                                </div>
-                                <form method="POST" action="{{ route('application.update', $applicant['appno']) }}"
-                                    class="theme-form theme-form-2 mega-form">
-                                    @csrf
-                                    @method('PUT')
-                                    <div class="row">
-                                        <div class="mb-4 row align-items-center">
-                                            <label class="form-label-title col-sm-2 mb-4">Course of Study:</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <select name="first_choice" class="form-control" required>
-                                                    <option value="" disabled>Select Program</option>
-                                                    @foreach ($programmes as $programme)
-                                                        <option value="{{ $programme->code }}">
-                                                            {{ $programme->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <label class="form-label-title col-sm-2 mb-4">Highest Qualification:</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <select name="qualification" class="form-control" required>
-                                                    <option value="" disabled>Select Program</option>
-                                                    <option value="Undergraduate (BSc)">Undergraduate (BSc)</option>
-                                                    <option value="Undergraduate (BSc)">Postgraduate Diploma (PGD)</option>
-                                                    <option value="Postgraduate (MSc)">Postgraduate (MSc)</option>
-                                                    <option value="Postgraduate (PhD)">Postgraduate (PhD)</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4 row align-items-center">
-                                            <label class="form-label-title col-sm-2 mb-4">
-                                                Full Name</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <input class="form-control" name="fullname"
-                                                    value="{{ $applicant['fullname'] ?? '' }}" type="text"
-                                                    placeholder="Full Name">
-                                                    <input class="form-control" value="{{ $applicant['appno'] }}" type="text"
-                                                    hidden name="appno">
-                                            </div>
-
-                                            <label class="form-label-title col-sm-2 mb-4">
-                                                Email Address</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <input class="form-control" value="{{ $applicant['email_address'] ?? '' }}"
-                                                    name="email_address" type="text" placeholder="Email Address">
-                                            </div>
-                                        </div>
-                                        <div class="mb-4 row align-items-center">
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Gender</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <select class="js-example-basic-single w-100" name="sex">
-                                                    <option value="{{ $applicant['sex'] }}" selected='selected'>
-                                                        {{ $applicant['sex'] ?? '' }}</option>
-                                                    <option>Male</option>
-                                                    <option>Female</option>
-                                                </select>
-                                            </div>
-
-                                            <label class="col-lg-2 col-md-3 mb-4 col-form-label form-label-title">
-                                                Date Of Birth</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <input class="form-control" value="{{ $applicant['date_of_birth'] ?? '' }}"
-                                                    name="date_of_birth" type="date" placeholder="Date Of Birth">
-                                            </div>
-                                        </div>
-                                        <div class="mb-4 row align-items-center nigeriaFields">
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Country</label>
-                                            <div class="col-sm-4 mb-4" id="internationalFields" style="display: none;">
-                                                <select class="js-example-basic-single w-100" name="country" id="country"
-                                                    required>
-                                                    <option value="{{ $applicant['country'] }}" selected='selected'>
-                                                        {{ $applicant['country'] ?? '' }}</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">State</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <select class="js-example-basic-single w-100" name="state_of_origin"
-                                                    id="state" onchange="selectLGA(this)" required>
-                                                    <option value="{{ $applicant['state_of_origin'] }}" selected='selected'>
-                                                        {{ $applicant['state_of_origin'] ?? '' }}</option>
-                                                    <option value="Other">Other</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="mb-4 row align-items-center">
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">LGA</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <select class="js-example-basic-single w-100" name="lga" id="lga"
-                                                    required>
-                                                    <option disabled>LGA Menu</option>
-                                                    <option value="{{ $applicant['lga'] }}" selected='selected'>
-                                                        {{ $applicant['lga'] ?? '' }}</option>
-                                                </select>
-                                            </div>
-
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Home Town</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <input class="form-control" value="{{ $applicant->home_town }}"
-                                                    name="home_town" type="text" placeholder="Address">
-                                            </div>
-                                        </div>
-                                        <div class="mb-4 row align-items-center">
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Address</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <input class="form-control"
-                                                    value="{{ $applicant['contact_address'] ?? '' }}"
-                                                    name="contact_address" type="text" placeholder="Address">
-                                            </div>
-
-                                            <label class="col-sm-2 mb-4 col-form-label form-label-title">Phone
-                                                Number</label>
-                                            <div class="col-sm-4 mb-4">
-                                                <input class="form-control" value="{{ $applicant['phone_no'] ?? '' }}"
-                                                    name="phone_no" type="text" placeholder="Phone Number">
-                                            </div>
-                                        </div>
-                                        <div class="button login button-1 text-center">
-                                            <button class="btn btn-primary" type="submit">
-                                                <span>Save</span>
-                                                <i class="fa fa-check"></i>
-                                            </button>
-                                          
-
-                                        </div>
-
-
-                                    </div>
-                                    
-                                </form>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Fetch the list of countries from the API
-            fetch('https://restcountries.com/v3.1/all') // Example API
-                .then(response => response.json())
-                .then(data => {
-                    const countrySelect = document.getElementById('country');
-
-                    data.sort((a, b) => a.name.common.localeCompare(b.name
-                        .common)); // Sort countries alphabetically
-                    // Loop through the data and create option elements
-                    data.forEach(country => {
-                        const option = document.createElement('option');
-                        option.value = country.name.common; // Use country full name as value
-                        option.textContent = country.name.common; // Use country name as display text
-                        countrySelect.appendChild(option);
-                    });
-
-                    // Show the dropdown after populating
-                    document.getElementById('internationalFields').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error fetching country data:', error);
-                });
-        });
-    </script>
-
-    <script>
-        //Fetch all States
-        fetch('https://nga-states-lga.onrender.com/fetch')
-            .then((res) => res.json())
-            .then((data) => {
-                var x = document.getElementById("state");
-                for (let index = 0; index < Object.keys(data).length; index++) {
-                    var option = document.createElement("option");
-                    option.text = data[index];
-                    option.value = data[index];
-                    x.add(option);
-                }
-            });
-        //Fetch Local Goverments based on selected state
-        function selectLGA(target) {
-            var state = target.value;
-            fetch('https://nga-states-lga.onrender.com/?state=' + state)
-                .then((res) => res.json())
-                .then((data) => {
-                    var x = document.getElementById("lga");
-
-                    var select = document.getElementById("lga");
-                    var length = select.options.length;
-                    for (i = length - 1; i >= 0; i--) {
-                        select.options[i] = null;
-                    }
-                    for (let index = 0; index < Object.keys(data).length; index++) {
-                        var option = document.createElement("option");
-                        option.text = data[index];
-                        option.value = data[index];
-                        x.add(option);
-                    }
-                });
-        }
-    </script>
-@endsection --}}
 @extends('layouts.dashboard')
 
 @section('content')
@@ -429,50 +214,127 @@
 
     <!-- JavaScript remains the same -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('https://restcountries.com/v3.1/all')
-                .then(response => response.json())
-                .then(data => {
-                    const countrySelect = document.getElementById('country');
-                    data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-                    data.forEach(country => {
-                        const option = document.createElement('option');
-                        option.value = country.name.common;
-                        option.textContent = country.name.common;
-                        countrySelect.appendChild(option);
-                    });
-                    document.getElementById('internationalFields').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error fetching country data:', error);
-                });
-
-
-            $('select[name="first_choice"]').on('change', function() {
-                var courseCode = $(this).val();
-                if (!courseCode) {
-                    $('input[name="department"]').val('');
-                    $('input[name="faculty"]').val('');
-                    return;
-                }
-                $.ajax({
-                    url: '/programme-info/' + courseCode,
-                    method: 'GET',
-                    success: function(data) {
-                        $('input[name="department"]').val(data.department);
-                        $('input[name="faculty"]').val(data.faculty);
-                    },
-                    error: function() {
-                        $('input[name="department"]').val('');
-                        $('input[name="faculty"]').val('');
-                    }
-                });
-            });
-
-            // Optionally, trigger change on page load if a course is already selected
-            $('select[name="first_choice"]').trigger('change');
+       document.addEventListener('DOMContentLoaded', function() {
+    console.log('Starting country loading process...');
+    
+    // First try with https
+    fetchCountryData('https://restcountries.com/v3.1/all')
+        .catch(error => {
+            console.log('HTTPS failed, trying HTTP fallback');
+            return fetchCountryData('http://restcountries.com/v3.1/all');
+        })
+        .catch(error => {
+            console.error('Both HTTPS and HTTP failed, using static list');
+            useStaticCountries();
         });
 
+    function fetchCountryData(url) {
+        return fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                populateCountries(data);
+                return true;
+            });
+    }
+
+    function populateCountries(data) {
+        try {
+            const countrySelect = document.getElementById('country');
+            if (!countrySelect) {
+                console.error('Country select element not found');
+                return;
+            }
+
+            // Clear existing options except the first one
+            while (countrySelect.options.length > 1) {
+                countrySelect.remove(1);
+            }
+
+            data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+            
+            data.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country.name.common;
+                option.textContent = country.name.common;
+                countrySelect.appendChild(option);
+            });
+
+            const internationalFields = document.getElementById('internationalFields');
+            if (internationalFields) {
+                internationalFields.style.cssText = 'display: block !important';
+                console.log('Country dropdown populated and shown');
+            } else {
+                console.error('internationalFields element not found');
+            }
+        } catch (e) {
+            console.error('Error populating countries:', e);
+            throw e; // Re-throw to trigger fallback
+        }
+    }
+
+    function useStaticCountries() {
+        const staticCountries = [
+    {name: {common: 'Algeria'}},
+    {name: {common: 'Angola'}},
+    {name: {common: 'Benin'}},
+    {name: {common: 'Botswana'}},
+    {name: {common: 'Burkina Faso'}},
+    {name: {common: 'Burundi'}},
+    {name: {common: 'Cabo Verde'}},
+    {name: {common: 'Cameroon'}},
+    {name: {common: 'Central African Republic'}},
+    {name: {common: 'Chad'}},
+    {name: {common: 'Comoros'}},
+    {name: {common: 'Congo (Brazzaville)'}},
+    {name: {common: 'Congo (Kinshasa)'}},
+    {name: {common: 'Côte d’Ivoire'}},
+    {name: {common: 'Djibouti'}},
+    {name: {common: 'Egypt'}},
+    {name: {common: 'Equatorial Guinea'}},
+    {name: {common: 'Eritrea'}},
+    {name: {common: 'Eswatini'}},
+    {name: {common: 'Ethiopia'}},
+    {name: {common: 'Gabon'}},
+    {name: {common: 'Gambia'}},
+    {name: {common: 'Ghana'}},
+    {name: {common: 'Guinea'}},
+    {name: {common: 'Guinea-Bissau'}},
+    {name: {common: 'Kenya'}},
+    {name: {common: 'Lesotho'}},
+    {name: {common: 'Liberia'}},
+    {name: {common: 'Libya'}},
+    {name: {common: 'Madagascar'}},
+    {name: {common: 'Malawi'}},
+    {name: {common: 'Mali'}},
+    {name: {common: 'Mauritania'}},
+    {name: {common: 'Mauritius'}},
+    {name: {common: 'Morocco'}},
+    {name: {common: 'Mozambique'}},
+    {name: {common: 'Namibia'}},
+    {name: {common: 'Niger'}},
+    {name: {common: 'Nigeria'}},
+    {name: {common: 'Rwanda'}},
+    {name: {common: 'Sao Tome and Principe'}},
+    {name: {common: 'Senegal'}},
+    {name: {common: 'Seychelles'}},
+    {name: {common: 'Sierra Leone'}},
+    {name: {common: 'Somalia'}},
+    {name: {common: 'South Africa'}},
+    {name: {common: 'South Sudan'}},
+    {name: {common: 'Sudan'}},
+    {name: {common: 'Tanzania'}},
+    {name: {common: 'Togo'}},
+    {name: {common: 'Tunisia'}},
+    {name: {common: 'Uganda'}},
+    {name: {common: 'Zambia'}},
+    {name: {common: 'Zimbabwe'}}
+];
+        populateCountries(staticCountries);
+    }
+});
         fetch('https://nga-states-lga.onrender.com/fetch')
             .then((res) => res.json())
             .then((data) => {
