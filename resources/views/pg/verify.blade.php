@@ -283,7 +283,7 @@
                     <button type="submit" class="btn btn-login w-100 mb-3">Verify</button>
                 </form>
                 <div class="footer">
-                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{ route('login') }}">ICT Unit</a>
+                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{ route('login') }}">Directorate of ICT</a>
                 </div>
             </div>
         </div>
