@@ -92,6 +92,10 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
+    <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
     <title>MOAUM Undergraduate Portal Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap 5 CDN -->
@@ -264,7 +268,7 @@
                     <button type="submit" class="btn btn-login w-100 mb-3">Verify</button>
                 </form>
                 <div class="footer">
-                    MOAUM Undergraduate Portal. Powered by <br> <a href="#">ICT Unit</a>
+                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{route('login')}}">ICT Unit</a>
                 </div>
             </div>
         </div>
