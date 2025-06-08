@@ -12,14 +12,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
     
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v2
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
           server-dir: ${{ secrets.FTP_TARGET }}/
           exclude: |
             **/.git*
