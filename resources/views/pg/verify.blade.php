@@ -93,9 +93,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
-    <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
     <title>MOAUM Undergraduate Portal Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap 5 CDN -->
@@ -242,7 +242,22 @@
                 <p>We are glad to see you again!</p>
             </div>
             <!-- Right Side -->
+
             <div class="login-right">
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <form class="login-form" method="POST" action="{{ route('applicant.verify.submit') }}">
                     @csrf
                     <h4 class="mb-4 fw-bold">PG Application Verification</h4>
@@ -252,7 +267,7 @@
                             <input type="text" name="matno" value="{{ old('matno') }}" class="form-control"
                                 id="username" placeholder="PG1234567"name="email" value="{{ old('email') }}" required
                                 autocomplete="username" autofocus>
-                            @error('app_number')
+                            @error('matno')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                             <span class="input-group-text bg-white border-0">
@@ -268,7 +283,7 @@
                     <button type="submit" class="btn btn-login w-100 mb-3">Verify</button>
                 </form>
                 <div class="footer">
-                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{route('login')}}">ICT Unit</a>
+                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{ route('login') }}">ICT Unit</a>
                 </div>
             </div>
         </div>

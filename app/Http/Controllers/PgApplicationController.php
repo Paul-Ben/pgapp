@@ -595,7 +595,7 @@ class PgApplicationController extends Controller
                 // Handle API error
                 $errorMessage = "Failed to retrieve application data. Status: " . $response->status();
                 Log::error($errorMessage);
-                return back()->with('error', $errorMessage);
+                return back()->with('error', 'Failed to retrieve application data. Please check your application number and try again.');
             }
         } catch (\Exception $e) {
             // Handle exceptions
