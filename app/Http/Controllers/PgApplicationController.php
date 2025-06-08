@@ -545,7 +545,7 @@ class PgApplicationController extends Controller
     }
 
     /**
-     * Verify the applicant's application number and retrieve their data.
+     * Verify the applicant's application number and retrieve their data from the external portal.
      */
     public function verifyApplicant(Request $request)
     {
