@@ -2,33 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Programme extends Model
 {
-    protected $fillable = [
-        'name',
-        'code',
-        'description',
-        'duration',
-        'faculty_id',
-        'department_id',
-        'created_by',
-        'updated_by',
-    ];
+    use HasFactory;
 
-    // public function faculty()
-    // {
-    //     return $this->belongsTo(Faculty::class);
-    // }
+    protected $fillable = ['code', 'department_id', 'name', 'min_score', 'archive', 'category'];
 
-    // public function department()
-    // {
-    //     return $this->belongsTo(Department::class);
-    // }
-
-    public function applicants()
+    // A programme belongs to a department
+    public function department()
     {
-        return $this->hasMany(Applicant::class);
+        return $this->belongsTo(Department::class);
     }
 }

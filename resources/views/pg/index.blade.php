@@ -11,6 +11,8 @@
                                 <!-- Personal Information Section -->
                                 <div class="card-header-2 mb-4">
                                     <h5>Personal Information</h5>
+                                    <p>Welcome applicant: {{ $applicant->fullname }} / {{ $applicant->appno }} <br>
+                                        Continue your application.</p>
                                 </div>
                                 <form method="POST" action="{{ route('application.update', $applicant['appno']) }}"
                                     class="theme-form theme-form-2 mega-form">
@@ -71,7 +73,8 @@
                                             <div class="col-sm-4 mb-4">
                                                 <select class="js-example-basic-single w-100" name="state_of_origin"
                                                     id="state" onchange="selectLGA(this)" required>
-                                                    <option value="{{ $applicant['state_of_origin'] }}" selected='selected'>
+                                                    <option value="{{ $applicant['state_of_origin'] }}"
+                                                        selected='selected'>
                                                         {{ $applicant['state_of_origin'] ?? '' }}</option>
                                                     <option value="Other">Other</option>
                                                 </select>
@@ -122,7 +125,7 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-4">Course of Study</label>
                                             <div class="col-sm-4 mb-4">
-                                                <select name="first_choice" class="form-control" required>
+                                                <select name="first_choice" class="form-control" id="programme" required>
                                                     <option value="" disabled selected>Select Program</option>
                                                     @foreach ($programmes as $programme)
                                                         <option value="{{ $programme->name }}"
@@ -135,36 +138,18 @@
 
                                             <label class="form-label-title col-sm-2 mb-4">Department</label>
                                             <div class="col-sm-4 mb-4">
-                                                {{-- <input type="text" name="department"
+                                                <input type="text" name="department"
                                                     value="{{ $applicant['department'] ?? '' }}" class="form-control"
-                                                    id="" > --}}
-                                                
-                                                <select name="department" class="form-control" >
-                                                    <option value="" disabled selected>Select Department</option>
-                                                    @foreach ($departments as $department)
-                                                        <option value="{{ $department->name }}" {{ $applicant['department'] == $department->name ? 'selected' : '' }}>
-                                                            {{ $department->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                    id="department" readonly>
                                             </div>
                                         </div>
 
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-4">Faculty</label>
                                             <div class="col-sm-4 mb-4">
-                                                {{-- <input type="text" name="faculty"
+                                                <input type="text" name="faculty"
                                                     value="{{ $applicant['faculty'] ?? '' }}" class="form-control"
-                                                    id="" > --}}
-                                               
-                                                <select name="faculty" class="form-control" >
-                                                    <option value="" disabled selected>Select Faculty</option>
-                                                    @foreach ($faculties as $faculty)
-                                                        <option value="{{ $faculty->name }}" {{ $applicant['faculty'] == $faculty->name ? 'selected' : '' }}>
-                                                            {{ $faculty->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                    id="faculty" readonly>
                                             </div>
 
                                             <label class="form-label-title col-sm-2 mb-4">Session</label>
@@ -214,127 +199,342 @@
 
     <!-- JavaScript remains the same -->
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-    console.log('Starting country loading process...');
-    
-    // First try with https
-    fetchCountryData('https://restcountries.com/v3.1/all')
-        .catch(error => {
-            console.log('HTTPS failed, trying HTTP fallback');
-            return fetchCountryData('http://restcountries.com/v3.1/all');
-        })
-        .catch(error => {
-            console.error('Both HTTPS and HTTP failed, using static list');
-            useStaticCountries();
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Starting country loading process...');
+
+            // First try with https
+            fetchCountryData('https://restcountries.com/v3.1/all')
+                .catch(error => {
+                    console.log('HTTPS failed, trying HTTP fallback');
+                    return fetchCountryData('http://restcountries.com/v3.1/all');
+                })
+                .catch(error => {
+                    console.error('Both HTTPS and HTTP failed, using static list');
+                    useStaticCountries();
+                });
+
+            function fetchCountryData(url) {
+                return fetch(url)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        populateCountries(data);
+                        return true;
+                    });
+            }
+
+            function populateCountries(data) {
+                try {
+                    const countrySelect = document.getElementById('country');
+                    if (!countrySelect) {
+                        console.error('Country select element not found');
+                        return;
+                    }
+
+                    // Clear existing options except the first one
+                    while (countrySelect.options.length > 1) {
+                        countrySelect.remove(1);
+                    }
+
+                    data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+                    data.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.name.common;
+                        option.textContent = country.name.common;
+                        countrySelect.appendChild(option);
+                    });
+
+                    const internationalFields = document.getElementById('internationalFields');
+                    if (internationalFields) {
+                        internationalFields.style.cssText = 'display: block !important';
+                        console.log('Country dropdown populated and shown');
+                    } else {
+                        console.error('internationalFields element not found');
+                    }
+                } catch (e) {
+                    console.error('Error populating countries:', e);
+                    throw e; // Re-throw to trigger fallback
+                }
+            }
+
+            function useStaticCountries() {
+                const staticCountries = [{
+                        name: {
+                            common: 'Algeria'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Angola'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Benin'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Botswana'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Burkina Faso'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Burundi'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Cabo Verde'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Cameroon'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Central African Republic'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Chad'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Comoros'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Congo (Brazzaville)'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Congo (Kinshasa)'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Côte d’Ivoire'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Djibouti'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Egypt'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Equatorial Guinea'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Eritrea'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Eswatini'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Ethiopia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Gabon'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Gambia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Ghana'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Guinea'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Guinea-Bissau'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Kenya'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Lesotho'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Liberia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Libya'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Madagascar'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Malawi'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Mali'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Mauritania'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Mauritius'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Morocco'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Mozambique'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Namibia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Niger'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Nigeria'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Rwanda'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Sao Tome and Principe'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Senegal'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Seychelles'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Sierra Leone'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Somalia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'South Africa'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'South Sudan'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Sudan'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Tanzania'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Togo'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Tunisia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Uganda'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Zambia'
+                        }
+                    },
+                    {
+                        name: {
+                            common: 'Zimbabwe'
+                        }
+                    }
+                ];
+                populateCountries(staticCountries);
+            }
         });
-
-    function fetchCountryData(url) {
-        return fetch(url)
-            .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
-                return response.json();
-            })
-            .then(data => {
-                populateCountries(data);
-                return true;
-            });
-    }
-
-    function populateCountries(data) {
-        try {
-            const countrySelect = document.getElementById('country');
-            if (!countrySelect) {
-                console.error('Country select element not found');
-                return;
-            }
-
-            // Clear existing options except the first one
-            while (countrySelect.options.length > 1) {
-                countrySelect.remove(1);
-            }
-
-            data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-            
-            data.forEach(country => {
-                const option = document.createElement('option');
-                option.value = country.name.common;
-                option.textContent = country.name.common;
-                countrySelect.appendChild(option);
-            });
-
-            const internationalFields = document.getElementById('internationalFields');
-            if (internationalFields) {
-                internationalFields.style.cssText = 'display: block !important';
-                console.log('Country dropdown populated and shown');
-            } else {
-                console.error('internationalFields element not found');
-            }
-        } catch (e) {
-            console.error('Error populating countries:', e);
-            throw e; // Re-throw to trigger fallback
-        }
-    }
-
-    function useStaticCountries() {
-        const staticCountries = [
-    {name: {common: 'Algeria'}},
-    {name: {common: 'Angola'}},
-    {name: {common: 'Benin'}},
-    {name: {common: 'Botswana'}},
-    {name: {common: 'Burkina Faso'}},
-    {name: {common: 'Burundi'}},
-    {name: {common: 'Cabo Verde'}},
-    {name: {common: 'Cameroon'}},
-    {name: {common: 'Central African Republic'}},
-    {name: {common: 'Chad'}},
-    {name: {common: 'Comoros'}},
-    {name: {common: 'Congo (Brazzaville)'}},
-    {name: {common: 'Congo (Kinshasa)'}},
-    {name: {common: 'Côte d’Ivoire'}},
-    {name: {common: 'Djibouti'}},
-    {name: {common: 'Egypt'}},
-    {name: {common: 'Equatorial Guinea'}},
-    {name: {common: 'Eritrea'}},
-    {name: {common: 'Eswatini'}},
-    {name: {common: 'Ethiopia'}},
-    {name: {common: 'Gabon'}},
-    {name: {common: 'Gambia'}},
-    {name: {common: 'Ghana'}},
-    {name: {common: 'Guinea'}},
-    {name: {common: 'Guinea-Bissau'}},
-    {name: {common: 'Kenya'}},
-    {name: {common: 'Lesotho'}},
-    {name: {common: 'Liberia'}},
-    {name: {common: 'Libya'}},
-    {name: {common: 'Madagascar'}},
-    {name: {common: 'Malawi'}},
-    {name: {common: 'Mali'}},
-    {name: {common: 'Mauritania'}},
-    {name: {common: 'Mauritius'}},
-    {name: {common: 'Morocco'}},
-    {name: {common: 'Mozambique'}},
-    {name: {common: 'Namibia'}},
-    {name: {common: 'Niger'}},
-    {name: {common: 'Nigeria'}},
-    {name: {common: 'Rwanda'}},
-    {name: {common: 'Sao Tome and Principe'}},
-    {name: {common: 'Senegal'}},
-    {name: {common: 'Seychelles'}},
-    {name: {common: 'Sierra Leone'}},
-    {name: {common: 'Somalia'}},
-    {name: {common: 'South Africa'}},
-    {name: {common: 'South Sudan'}},
-    {name: {common: 'Sudan'}},
-    {name: {common: 'Tanzania'}},
-    {name: {common: 'Togo'}},
-    {name: {common: 'Tunisia'}},
-    {name: {common: 'Uganda'}},
-    {name: {common: 'Zambia'}},
-    {name: {common: 'Zimbabwe'}}
-];
-        populateCountries(staticCountries);
-    }
-});
         fetch('https://nga-states-lga.onrender.com/fetch')
             .then((res) => res.json())
             .then((data) => {
@@ -365,33 +565,24 @@
                         x.add(option);
                     }
                 });
-        }
-    </script>
-    {{-- <script>
-        $(document).ready(function() {
-            $('select[name="first_choice"]').on('change', function() {
-                var courseCode = $(this).val();
-                if (!courseCode) {
-                    $('input[name="department"]').val('');
-                    $('input[name="faculty"]').val('');
-                    return;
-                }
-                $.ajax({
-                    url: 'programme-info/' + courseCode,
-                    method: 'GET',
-                    success: function(data) {
-                        $('input[name="department"]').val(data.department);
-                        $('input[name="faculty"]').val(data.faculty);
-                    },
-                    error: function() {
-                        $('input[name="department"]').val('');
-                        $('input[name="faculty"]').val('');
-                    }
-                });
-            });
+            }
 
-            // Optionally, trigger change on page load if a course is already selected
-            $('select[name="first_choice"]').trigger('change');
+            document.getElementById('programme').addEventListener('change', function() {
+            const programmeName = this.value;
+            if (programmeName) {
+                fetch(`/programme?name=${programmeName}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('department').value = data.department.name;
+                        document.getElementById('faculty').value = data.department.faculty.name;
+                    });
+            } else {
+                document.getElementById('department').value = '';
+                document.getElementById('faculty').value = '';
+            }
         });
-    </script> --}}
+    </script>
+    <script>
+    
+    </script>
 @endsection

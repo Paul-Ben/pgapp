@@ -258,7 +258,7 @@
                         </ul>
                     </div>
                 @endif
-                <form class="login-form" method="POST" action="{{ route('applicant.verify.submit') }}">
+                {{-- <form class="login-form" method="GET" action="{{ route('applicant.verify.submit') }}">
                     @csrf
                     <h4 class="mb-4 fw-bold">PG Application Verification</h4>
                     <div class="mb-3">
@@ -281,9 +281,34 @@
                         <label class="form-check-label" for="rememberMe">Remember Me</label>
                     </div>
                     <button type="submit" class="btn btn-login w-100 mb-3">Verify</button>
+                </form> --}}
+                <form class="login-form" method="POST" action="{{ route('applicant.verify.submit') }}">
+                    @csrf
+                    <h4 class="mb-4 fw-bold">PG Application Verification</h4>
+                    <div class="mb-3">
+                        <label for="matno" class="form-label visually-hidden">PG Number</label>
+                        <div class="input-group">
+                            <input type="text" name="matno" value="{{ old('matno') }}" class="form-control"
+                                id="matno" placeholder="PG1234567" pattern="^S\d{11}$" required autocomplete="username" autofocus>
+                           
+                            <span class="input-group-text bg-white border-0">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                             @error('matno')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">Remember Me</label>
+                    </div>
+                    <button type="submit" class="btn btn-login w-100 mb-3">Verify</button>
                 </form>
                 <div class="footer">
-                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{ route('login') }}">Directorate of ICT</a>
+                    MOAUM Postgraduate Application Portal. Powered by <br> <a href="{{ route('login') }}">Directorate of
+                        ICT</a>
                 </div>
             </div>
         </div>

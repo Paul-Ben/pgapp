@@ -6,6 +6,7 @@ use App\Mail\RefereeNotificationMail;
 use App\Models\Applicant;
 use App\Models\ApplicantInstitutionDetail;
 use App\Models\ApplicantsReferee;
+use App\Models\Faculty;
 use App\Models\Programme;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class PgApplicationController extends Controller
      * @param string $appno
      * @return \Illuminate\View\View
      */
+
     public function index($appno)
     {
         $applicant = Applicant::where('appno', $appno)->first();
@@ -45,22 +47,24 @@ class PgApplicationController extends Controller
             return view('pg.applicationsubmitted', compact('applicant'))
                 ->with('success', 'Application already completed.');
         }
-        // Cache static data for 1 hour
-        $programmes = Cache::remember('programmes_list', 3600, function () {
-            return Programme::select('name', 'code')->get();
-        });
-        $departments = Cache::remember('departments_list', 3600, function () {
-            return DB::table('departments')->select('name', 'code')->get();
-        });
-        $faculties = Cache::remember('faculties_list', 3600, function () {
-            return DB::table('faculties')->select('name', 'code')->get();
-        });
+
+       $programmes = Programme::select('id', 'name', 'code')->get();
+    
         return view("pg.index", [
             'applicant' => $applicant,
             'programmes' => $programmes,
-            'departments' => $departments,
-            'faculties' => $faculties
+            
         ]);
+    }
+
+     public function showByName(Request $request)
+    {
+        $programmeName = $request->query('name');
+        $programme = Programme::where('name', $programmeName)->with('department.faculty')->first();
+        if (!$programme) {
+            return response()->json(['error' => 'Programme not found'], 404);
+        }
+        return response()->json($programme);
     }
 
     /**
@@ -402,7 +406,7 @@ class PgApplicationController extends Controller
         return view('pg.presubmission', compact('applicant', 'institutionDetails', 'referees', 'refereesmail', 'programmes', 'faculties', 'departments'))
             ->with('applicant_id', $applicant_id);
     }
-   
+
 
     /* 
 * Pre-submission view for applicants to review their application before Final submission
@@ -463,7 +467,7 @@ class PgApplicationController extends Controller
                         'updated_at' => now(),
                     ];
                 })->toArray();
-                ApplicantInstitutionDetail::insert($institutions);
+                DB::table('applicant_institution_details')->insert($institutions);
             }
             // Batch update referees
             ApplicantsReferee::where('applicants_id', $appno)->delete();
@@ -479,7 +483,18 @@ class PgApplicationController extends Controller
                         'updated_at' => now(),
                     ];
                 })->toArray();
-                ApplicantsReferee::insert($refereesData);
+                $applicants_id = $appno;
+                foreach ($refereesData as $key => $referee) {
+                    DB::table('applicantsreferees')->insert([
+                        'applicants_id' => $applicants_id,
+                        'fullname' => $referee['fullname'],
+                        'email_address' => $referee['email_address'],
+                        'phone_no' => $referee['phone_no'],
+                        'rank' => $referee['rank'],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
             $referees = ApplicantsReferee::where('applicants_id', $appno)->get();
             foreach ($referees as $referee) {
@@ -549,58 +564,83 @@ class PgApplicationController extends Controller
      */
     public function verifyApplicant(Request $request)
     {
-        // Validate the input
-        $request->validate([
-            'matno' => 'required|string|max:20'
+        $validated = $request->validate([
+            'matno' => 'required|string|size:12|regex:/^S\d{11}$/'
         ]);
 
-        // check if the mat no is already in the database
-        $existingApplicant = Applicant::where('appno', $request->input('matno'))->first();
+         $existingApplicant = Applicant::where('appno', $validated['matno'])->first();
+
         if ($existingApplicant) {
-            // If the applicant already exists, redirect to the application index
             return redirect()->route('application.index', ['appno' => $existingApplicant->appno])
                 ->with('success', 'Application data retrieved successfully');
         }
 
-        $matno = $request->input('matno');
 
         try {
-            // Make the API request to the external portal
-            $response = Http::get('https://portal.bsum.edu.ng/application/Application', [
-                'matno' => $matno
-            ]);
+            // Make the API request with JSON headers
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])
+                ->timeout(30) // 30 second timeout
+                ->post('https://portal.bsum.edu.ng/application/Application', [
+                    'matno' => $validated['matno']
+                ]);
 
-            // Check if the request was successful
+            // Check if request was successful
             if ($response->successful()) {
-                $data = $response->json();
+                $apiData = $response->json();
 
+                // Validate required fields in response
+                if (!isset($apiData['appNo'], $apiData['fullName'], $apiData['sessions'])) {
+                    throw new \Exception('Invalid API response format');
+                }
+
+                if ($apiData['paymentStatus'] != 1) {
+                    // Handle case where payment is not verified
+                    return back()->with('error', 'Payment not verified. Please complete your payment before proceeding.');
+                   
+                }
+
+                // Create or update applicant record
                 $applicant = Applicant::updateOrCreate(
-                    ['appno' => $matno], // Search criteria
+                    ['appno' => $apiData['appNo']],
                     [
-                        'appno' => $matno, // Store the entire JSON response
-                        'fullname' => $data['fullName'] ?? null,
-                        'sessions' => $data['sessions'] ?? null,
-                        'school_id' => $data['schoolId'] ?? null,
-                        'application_type' => $data['applicationType'] ?? null,
-                        'is_verified' => $data['paymentStatus'] ?? null,
+                        'appno' => $apiData['appNo'],
+                        'fullname' => $apiData['fullName'],
+                        'sessions' => $apiData['sessions'],
+                        'school_id' => $apiData['schoolId'] ?? null,
+                        'application_type' => $apiData['applicationType'] ?? null,
+                        'is_verified' => $apiData['paymentStatus'] == 1,
                         'refereers_needed' => 2,
+                        // 'api_response' => json_encode($apiData) // Store full response if needed
                     ]
                 );
 
+                // Return success response
                 $appno = $applicant->appno;
                 // Redirect to application route with matno parameter
                 return redirect()->route('application.index', ['appno' => $appno])
                     ->with('success', 'Application data retrieved successfully');
             } else {
-                // Handle API error
-                $errorMessage = "Failed to retrieve application data. Status: " . $response->status();
-                Log::error($errorMessage);
+                // Handle API error response
+                $statusCode = $response->status();
+                $errorMessage = match ($statusCode) {
+                    404 => 'Application number not found',
+                    401 => 'Unauthorized access to verification service',
+                    500 => 'Verification service error',
+                    default => 'Failed to verify application'
+                };
+
+                Log::error("API Verification Failed - Status: {$statusCode}, Matno: {$validated['matno']}");
                 return back()->with('error', 'Failed to retrieve application data. Please check your application number and try again.');
             }
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            Log::error("Connection Error: " . $e->getMessage());
+            return back()->with('error', 'Verification service is currently unavailable. Please try again later.');
         } catch (\Exception $e) {
-            // Handle exceptions
-            Log::error("Error verifying application: " . $e->getMessage());
-            return back()->with('error', 'An error occurred while processing your request');
+            Log::error("Verification Error: " . $e->getMessage());
+            return back()->with('error', 'Verify your application number and try again');
         }
     }
     public function programmeForm($appno)
