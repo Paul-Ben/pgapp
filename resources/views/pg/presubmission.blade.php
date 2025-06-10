@@ -59,7 +59,7 @@
 
             <header class="top-section mb-4">
                 <div class="logo-container">
-                    <img src="{{ asset('BSULOGO3.PNG') }}" alt="School Logo" id="schoolLogo">
+                    <img src="{{ asset('BSULOGO3.png') }}" alt="School Logo" id="schoolLogo">
                 </div>
                 <div class="school-address">
                     <h2>Reverend Father Moses Orshio Adasu University, Makurdi.</h2>
@@ -273,7 +273,7 @@
                                         value="{{ $referee->rank }}" class="form-control">
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-sm btn-danger remove-referee">Remove</button>
+                            {{-- <button type="button" class="btn btn-sm btn-danger remove-referee">Remove</button> --}}
                         </div>
                     @endforeach
                 </div>

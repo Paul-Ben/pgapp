@@ -48,16 +48,16 @@ class PgApplicationController extends Controller
                 ->with('success', 'Application already completed.');
         }
 
-       $programmes = Programme::select('id', 'name', 'code')->get();
-    
+        $programmes = Programme::select('id', 'name', 'code')->get();
+
         return view("pg.index", [
             'applicant' => $applicant,
             'programmes' => $programmes,
-            
+
         ]);
     }
 
-     public function showByName(Request $request)
+    public function showByName(Request $request)
     {
         $programmeName = $request->query('name');
         $programme = Programme::where('name', $programmeName)->with('department.faculty')->first();
@@ -153,7 +153,8 @@ class PgApplicationController extends Controller
 
         ]);
 
-        ApplicantsReferee::create($validated);
+        // ApplicantsReferee::create($validated);
+        DB::table('applicants_referees')->insert($validated);
 
 
         $count = ApplicantsReferee::where('applicants_id', $applicant_id)->count();
@@ -411,19 +412,127 @@ class PgApplicationController extends Controller
     /* 
 * Pre-submission view for applicants to review their application before Final submission
 */
+    // public function updatePresubmission(Request $request, $appno)
+    // {
+    //     $referees = ApplicantsReferee::where('applicants_id', $appno)->get();
+    //     $refereesmail = $referees->pluck('mail_sent');
+    //     $allRefereesNotified = $refereesmail->every(fn($mail) => $mail == 1);
+    //     $applicant = Applicant::where('appno', $appno)->first();
+    //     if ($allRefereesNotified) {
+    //         return view('pg.applicationsubmitted', ['applicant' => $applicant])
+    //             ->with('success', 'Application already completed.');
+    //     }
+    //     DB::beginTransaction();
+    //     try {
+    //         $applicant = Applicant::where('appno', $appno)->firstOrFail();
+    //         if ($request->hasFile('passport')) {
+    //             if (!empty($applicant->passport)) {
+    //                 $oldPath = str_replace('/storage/', '', $applicant->passport);
+    //                 Storage::disk('public')->delete($oldPath);
+    //             }
+    //             $passportFile = $request->file('passport');
+    //             $passportExt = $passportFile->getClientOriginalExtension();
+    //             $passportName = $appno . '.' . $passportExt;
+    //             $passportFile->storeAs('passports', $passportName, 'public');
+    //             $passportUrl = Storage::url('passports/' . $passportName);
+    //         }
+    //         $applicant->fill([
+                // 'fullname' => $request->input('fullname'),
+                // 'sex' => $request->input('sex'),
+                // 'date_of_birth' => $request->input('date_of_birth'),
+                // 'phone_no' => $request->input('phone_no'),
+                // 'email_address' => $request->input('email_address'),
+                // 'country' => $request->input('country'),
+                // 'state_of_origin' => $request->input('state_of_origin'),
+                // 'lga' => $request->input('lga'),
+                // 'contact_address' => $request->input('contact_address'),
+                // 'passport' => $passportUrl ?? $applicant->passport,
+                // 'first_choice' => $request->input('first_choice'),
+                // 'qualification' => $request->input('qualification'),
+                // 'faculty' => $request->input('faculty'),
+                // 'department' => $request->input('department'),
+    //         ]);
+    //         $applicant->save();
+    //         // Batch update institutions
+    //         // ApplicantInstitutionDetail::where('applicants_id', $appno)->delete();
+    //         if ($request->has('institutions')) {
+    //             $institutions = collect($request->input('institutions'))->map(function ($institution) use ($appno) {
+    //                 return [
+    //                     'applicants_id' => $appno,
+    //                     'institution_name' => $institution['institution_name'] ?? '',
+    //                     'field_of_study' => $institution['field_of_study'] ?? '',
+    //                     'date_started' => $institution['date_started'] ?? null,
+    //                     'date_ended' => $institution['date_ended'] ?? null,
+    //                     'certificate_awarded' => $institution['certificate_awarded'] ?? '',
+    //                     'created_at' => now(),
+    //                     'updated_at' => now(),
+    //                 ];
+    //             })->toArray();
+    //             DB::table('applicant_institution_details')->insert($institutions);
+    //         }
+    //         // Batch update referees
+    //         // ApplicantsReferee::where('applicants_id', $appno)->delete();
+    //         if ($request->has('referees')) {
+    //             $refereesData = collect($request->input('referees'))->map(function ($referee) use ($appno) {
+    //                 return [
+    //                     'applicants_id' => $appno,
+    //                     'fullname' => $referee['fullname'] ?? '',
+    //                     'email_address' => $referee['email_address'] ?? '',
+    //                     'phone_no' => $referee['phone_no'] ?? '',
+    //                     'rank' => $referee['rank'] ?? '',
+    //                     'created_at' => now(),
+    //                     'updated_at' => now(),
+    //                 ];
+    //             })->toArray();
+    //             $applicants_id = $appno;
+    //             foreach ($refereesData as $key => $referee) {
+    //                 DB::table('applicantsreferees')->insert([
+    //                     'applicants_id' => $applicants_id,
+    //                     'fullname' => $referee['fullname'],
+    //                     'email_address' => $referee['email_address'],
+    //                     'phone_no' => $referee['phone_no'],
+    //                     'rank' => $referee['rank'],
+    //                     'created_at' => now(),
+    //                     'updated_at' => now(),
+    //                 ]);
+    //             }
+    //         }
+    //         $referees = ApplicantsReferee::where('applicants_id', $appno)->get();
+    //         foreach ($referees as $referee) {
+    //             if (!empty($referee->email_address)) {
+    //                 try {
+    //                     Mail::to($referee->email_address)->send(new RefereeNotificationMail($referee, $applicant));
+    //                 } catch (\Exception $e) {
+    //                     Log::error('Failed to send email to referee: ' . $e->getMessage());
+    //                 }
+    //             }
+    //             $referee->update(['mail_sent' => 1]);
+    //         }
+    //         DB::commit();
+    //         return redirect()->route('report.view', $appno)
+    //             ->with('success', 'Application status updated successfully.');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return redirect()->back()->withErrors(['error' => 'Failed to update application: ' . $e->getMessage()]);
+    //     }
+    // }
     public function updatePresubmission(Request $request, $appno)
     {
         $referees = ApplicantsReferee::where('applicants_id', $appno)->get();
         $refereesmail = $referees->pluck('mail_sent');
         $allRefereesNotified = $refereesmail->every(fn($mail) => $mail == 1);
-        $applicant = Applicant::where('appno', $appno)->first();
+
         if ($allRefereesNotified) {
+            $applicant = Applicant::where('appno', $appno)->first();
             return view('pg.applicationsubmitted', ['applicant' => $applicant])
                 ->with('success', 'Application already completed.');
         }
+
         DB::beginTransaction();
         try {
             $applicant = Applicant::where('appno', $appno)->firstOrFail();
+            $passportUrl = $applicant->passport; // Initialize with current value
+
             if ($request->hasFile('passport')) {
                 if (!empty($applicant->passport)) {
                     $oldPath = str_replace('/storage/', '', $applicant->passport);
@@ -435,7 +544,8 @@ class PgApplicationController extends Controller
                 $passportFile->storeAs('passports', $passportName, 'public');
                 $passportUrl = Storage::url('passports/' . $passportName);
             }
-            $applicant->fill([
+
+            $applicant->update([
                 'fullname' => $request->input('fullname'),
                 'sex' => $request->input('sex'),
                 'date_of_birth' => $request->input('date_of_birth'),
@@ -451,62 +561,48 @@ class PgApplicationController extends Controller
                 'faculty' => $request->input('faculty'),
                 'department' => $request->input('department'),
             ]);
-            $applicant->save();
-            // Batch update institutions
-            ApplicantInstitutionDetail::where('applicants_id', $appno)->delete();
+
+            // Handle institutions
             if ($request->has('institutions')) {
+                ApplicantInstitutionDetail::where('applicants_id', $appno)->delete();
                 $institutions = collect($request->input('institutions'))->map(function ($institution) use ($appno) {
-                    return [
+                    return array_merge($institution, [
                         'applicants_id' => $appno,
-                        'institution_name' => $institution['institution_name'] ?? '',
-                        'field_of_study' => $institution['field_of_study'] ?? '',
-                        'date_started' => $institution['date_started'] ?? null,
-                        'date_ended' => $institution['date_ended'] ?? null,
-                        'certificate_awarded' => $institution['certificate_awarded'] ?? '',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                })->toArray();
-                DB::table('applicant_institution_details')->insert($institutions);
-            }
-            // Batch update referees
-            ApplicantsReferee::where('applicants_id', $appno)->delete();
-            if ($request->has('referees')) {
-                $refereesData = collect($request->input('referees'))->map(function ($referee) use ($appno) {
-                    return [
-                        'applicants_id' => $appno,
-                        'fullname' => $referee['fullname'] ?? '',
-                        'email_address' => $referee['email_address'] ?? '',
-                        'phone_no' => $referee['phone_no'] ?? '',
-                        'rank' => $referee['rank'] ?? '',
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                })->toArray();
-                $applicants_id = $appno;
-                foreach ($refereesData as $key => $referee) {
-                    DB::table('applicantsreferees')->insert([
-                        'applicants_id' => $applicants_id,
-                        'fullname' => $referee['fullname'],
-                        'email_address' => $referee['email_address'],
-                        'phone_no' => $referee['phone_no'],
-                        'rank' => $referee['rank'],
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
-                }
+                })->toArray();
+
+                DB::table('applicant_institution_details')->insert($institutions);
             }
+
+            // Handle referees
+            if ($request->has('referees')) {
+                ApplicantsReferee::where('applicants_id', $appno)->delete();
+                $refereesData = collect($request->input('referees'))->map(function ($referee) use ($appno) {
+                    return array_merge($referee, [
+                        'applicants_id' => $appno,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                })->toArray();
+
+                DB::table('applicantsreferees')->insert($refereesData);
+            }
+
+            // Send emails
             $referees = ApplicantsReferee::where('applicants_id', $appno)->get();
             foreach ($referees as $referee) {
                 if (!empty($referee->email_address)) {
                     try {
                         Mail::to($referee->email_address)->send(new RefereeNotificationMail($referee, $applicant));
+                        $referee->update(['mail_sent' => 1]);
                     } catch (\Exception $e) {
                         Log::error('Failed to send email to referee: ' . $e->getMessage());
                     }
                 }
-                $referee->update(['mail_sent' => 1]);
             }
+
             DB::commit();
             return redirect()->route('report.view', $appno)
                 ->with('success', 'Application status updated successfully.');
@@ -515,7 +611,6 @@ class PgApplicationController extends Controller
             return redirect()->back()->withErrors(['error' => 'Failed to update application: ' . $e->getMessage()]);
         }
     }
-
     /**
      * Show the referee submission form for a specific referee.
      */
@@ -568,7 +663,7 @@ class PgApplicationController extends Controller
             'matno' => 'required|string|size:12|regex:/^S\d{11}$/'
         ]);
 
-         $existingApplicant = Applicant::where('appno', $validated['matno'])->first();
+        $existingApplicant = Applicant::where('appno', $validated['matno'])->first();
 
         if ($existingApplicant) {
             return redirect()->route('application.index', ['appno' => $existingApplicant->appno])
@@ -599,7 +694,6 @@ class PgApplicationController extends Controller
                 if ($apiData['paymentStatus'] != 1) {
                     // Handle case where payment is not verified
                     return back()->with('error', 'Payment not verified. Please complete your payment before proceeding.');
-                   
                 }
 
                 // Create or update applicant record
