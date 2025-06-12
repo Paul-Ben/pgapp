@@ -65,7 +65,7 @@
                                             <label class="col-sm-2 mb-4 col-form-label form-label-title">Application
                                                 Type</label>
                                             <div class="col-sm-4 mb-4">
-                                                <select class="js-example-basic-single w-100" name="recommendation_status">
+                                                <select class="js-example-basic-single w-100" name="recommendation_status" required>
                                                     <option selected>Select Recommendation</option>
                                                     <option value="1">Recommended</option>
                                                     <option value="0">Not Recommended</option>
@@ -73,7 +73,7 @@
                                             </div>
                                             <label class="col-sm-2 mb-4 col-form-label form-label-title">Comments</label>
                                             <div class="col-sm-4 mb-4">
-                                                <textarea class="form-control" name="note" rows="3" placeholder="Comments"></textarea>
+                                                <textarea class="form-control" name="note" rows="3" placeholder="Comments" required></textarea>
                                             </div>
                                         </div>
 

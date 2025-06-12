@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             FacultySeeder::class,
             DepartmentSeeder::class,
-            ApplicantsTableSeeder::class,
+            // ApplicantsTableSeeder::class,
             ProgrammesTableSeeder::class,
         ]);
     }

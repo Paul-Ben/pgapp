@@ -22,10 +22,10 @@ return new class extends Migration
             $table->string('country', 50)->nullable();
             $table->string('state_of_origin', 50)->nullable();
             $table->string('lga', 50)->nullable();
-            $table->string('email_address', 21)->nullable();
+            $table->string('email_address', 50)->nullable();
             $table->string('phone_no', 20)->nullable();
             $table->string('contact_address', 52)->nullable();
-            $table->string('home_town', 7)->nullable();
+            $table->string('home_town', 70)->nullable();
             $table->string('passport')->nullable();
             $table->string('credentials')->nullable();
             $table->dateTime('date_initiated')->nullable();

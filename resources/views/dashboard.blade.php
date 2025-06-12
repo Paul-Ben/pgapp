@@ -38,6 +38,14 @@
                                                 <td><span class="badge badge-primary">{{ $applicant->status }}</span></td>
                                             @elseif ($applicant->status == 'Completed')
                                                 <td><span class="badge badge-success">{{ $applicant->status }}</span></td>
+                                            @elseif ($applicant->status == 'Pending Review')
+                                                <td><span class="badge badge-success">{{ $applicant->status }}</span></td>    
+                                                
+                                             @elseif ($applicant->status == 'In Progress')
+                                                <td><span class="badge badge-success">{{ $applicant->status }}</span></td>    
+                                                
+                                            @elseif ($applicant->status == null)
+                                                <td><span class="badge badge-success">Started</span></td>    
                                                 
                                             @endif
                                            

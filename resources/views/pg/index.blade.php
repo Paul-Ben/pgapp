@@ -8,6 +8,15 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-body">
+                                @if ($errors->any())
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
                                 <!-- Personal Information Section -->
                                 <div class="card-header-2 mb-4">
                                     <h5>Personal Information</h5>
@@ -165,18 +174,18 @@
                                             <div class="col-sm-4 mb-4">
                                                 <select name="qualification" class="form-control" required>
                                                     <option value="" disabled selected>Select Qualification</option>
-                                                    <option value="Undergraduate (BSc)"
-                                                        {{ $applicant['qualification'] == 'Undergraduate (BSc)' ? 'selected' : '' }}>
-                                                        Undergraduate (BSc)</option>
-                                                    <option value="Postgraduate Diploma (PGD)"
-                                                        {{ $applicant['qualification'] == 'Postgraduate Diploma (PGD)' ? 'selected' : '' }}>
-                                                        Postgraduate Diploma (PGD)</option>
-                                                    <option value="Postgraduate (MSc)"
-                                                        {{ $applicant['qualification'] == 'Postgraduate (MSc)' ? 'selected' : '' }}>
-                                                        Postgraduate (MSc)</option>
-                                                    <option value="Postgraduate (PhD)"
-                                                        {{ $applicant['qualification'] == 'Postgraduate (PhD)' ? 'selected' : '' }}>
-                                                        Postgraduate (PhD)</option>
+                                                    <option value="HND"
+                                                        {{ $applicant['qualification'] == 'HND' ? 'selected' : '' }}>
+                                                        HND</option>
+                                                    <option value="First Degree"
+                                                        {{ $applicant['qualification'] == 'First Degree' ? 'selected' : '' }}>
+                                                        First Degree</option>
+                                                    <option value="PGD)"
+                                                        {{ $applicant['qualification'] == 'PGD' ? 'selected' : '' }}>
+                                                        PGD</option>
+                                                    <option value="PhD"
+                                                        {{ $applicant['qualification'] == 'PhD' ? 'selected' : '' }}>
+                                                        PhD</option>
                                                 </select>
                                             </div>
                                         </div>

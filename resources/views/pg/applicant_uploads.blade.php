@@ -60,12 +60,12 @@
                                                 <span>Upload</span>
                                                 <i class="fa fa-upload"></i>
                                             </button>
-                                            <a href="{{ route('referees.form', $applicants_id) }}">
+                                            {{-- <a href="{{ route('referees.form', $applicants_id) }}">
                                                 <button class="btn btn-success" type="button" style="background: blue">
                                                     <span>Next</span>
                                                     <i class="fa fa-arrow-right"></i>
                                                 </button>
-                                            </a>
+                                            </a> --}}
                                         </div>
                                     </div>
                                 </form>

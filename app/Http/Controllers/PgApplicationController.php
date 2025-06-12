@@ -83,7 +83,7 @@ class PgApplicationController extends Controller
             'qualification' => 'nullable|string|max:50',
             'first_choice' => 'nullable|string|max:50',
             'fullname' => 'nullable|string|max:75',
-            'email_address' => 'nullable|email|max:21',
+            'email_address' => 'nullable|email|max:50',
             'sex' => 'nullable|string|max:6',
             'date_of_birth' => 'nullable|date',
             'state_of_origin' => 'nullable|string|max:50',
@@ -154,7 +154,7 @@ class PgApplicationController extends Controller
         ]);
 
         // ApplicantsReferee::create($validated);
-        DB::table('applicants_referees')->insert($validated);
+        DB::table('applicantsreferees')->insert($validated);
 
 
         $count = ApplicantsReferee::where('applicants_id', $applicant_id)->count();
@@ -351,8 +351,8 @@ class PgApplicationController extends Controller
                 'passport' => $passportUrl,
                 'updated_at' => now(),
             ]);
-
-        return redirect()->back()->with('success', 'Files uploaded and applicant updated successfully.');
+            return redirect()->route('referees.form', $applicantId)->with('success', 'Files uploaded  successfully.');
+        // return redirect()->back()->with('success', 'Files uploaded and applicant updated successfully.');
     }
 
     /**
@@ -597,6 +597,7 @@ class PgApplicationController extends Controller
                     try {
                         Mail::to($referee->email_address)->send(new RefereeNotificationMail($referee, $applicant));
                         $referee->update(['mail_sent' => 1]);
+                        Log::info('Email sent to referee: ' . $referee->email_address);
                     } catch (\Exception $e) {
                         Log::error('Failed to send email to referee: ' . $e->getMessage());
                     }
@@ -647,6 +648,7 @@ class PgApplicationController extends Controller
         // Update the applicant's status to Completed
         Applicant::where('appno', $applicants_id)->update([
             'status' => 'Completed',
+            'ref_completion_status' => 1,
             'date_completed' => now(),
         ]);
 

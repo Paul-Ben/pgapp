@@ -141,7 +141,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://www.bsum.edu.ng/njms/img/logo.png" alt="Company Logo" class="logo">
+            <img src="https://portal.bsum.edu.ng/BSULOGO.PNG" alt="Company Logo" class="logo">
         </div>
 
         <h3>Dear {{ $referee->fullname }}!</h3>
@@ -153,14 +153,14 @@
             <h3>Application Details</h3>
             <p><strong>Applicant Name:</strong> {{ $applicant->fullname }}</p>
             <p><strong>Application No:</strong> ({{ $applicant->appno }})</p>
-            <p><strong>Program:</strong> {{ $applicant->programme }}</p>
+            <p><strong>Program:</strong> {{ $applicant->first_choice }}</p>
             <p><strong>Date Submitted:</strong> {{ now()->format('F j, Y') }}</p>
         </div>
 
         <p>Please click the link below to securely submit your reference:</p>
         <p style="text-align: center; margin-top: 25px; margin-bottom: 25px;">
             {{-- <a href="{{ route('referee.reference', ['applicant' => $applicant->id, 'referee' => $referee->id]) }}" class="button-link">Complete Reference</a> --}}
-            <a href="http://pg.test/referee-report/{{ $referee->id }}" class="button-link">Complete Reference</a>
+            <a href="http://pg.bsum.edu.ng/referee-report/{{ $referee->id }}" class="button-link">Complete Reference</a>
         </p>
         
         <p>Your timely response is greatly appreciated.</p>
