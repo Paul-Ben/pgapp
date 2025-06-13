@@ -307,20 +307,20 @@
                                     </a>
                                 </li>
 
-                                {{-- <li class="sidebar-list">
+                                <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title" href="javascript:void(0)">
                                         <i data-feather="users"></i>
-                                        <span>Users</span>
+                                        <span>Applications</span>
                                     </a>
                                     <ul class="sidebar-submenu">
                                         <li>
-                                            <a href="all-users.html">All users</a>
+                                            <a href="{{route('all.applicants')}}">All Applications</a>
                                         </li>
                                         <li>
-                                            <a href="add-new-user.html">Add new user</a>
+                                            <a href="{{route('completed.applications')}}">Completed Applications</a>
                                         </li>
                                     </ul>
-                                </li> --}}
+                                </li>
 
                                 <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="#">
