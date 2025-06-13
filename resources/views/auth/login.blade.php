@@ -106,7 +106,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
     <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
-    <title>MOAUM Undergraduate Portal Login</title>
+    <title>MOAUM Postgraduate Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -253,6 +253,16 @@
             </div>
             <!-- Right Side -->
             <div class="login-right">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    
+                @endif
                 <form class="login-form" method="POST" action="{{ route('login') }}">
                     @csrf
                     <h4 class="mb-4 fw-bold">SIGN IN</h4>
@@ -261,9 +271,6 @@
                         <div class="input-group">
                             <input type="text" class="form-control" id="username" placeholder="Email"name="email"
                                 value="{{ old('email') }}" required autocomplete="username" autofocus>
-                            @error('email')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                             <span class="input-group-text bg-white border-0">
                                 <i class="bi bi-envelope"></i>
                             </span>
@@ -274,9 +281,6 @@
                         <div class="input-group">
                             <input type="password" name="password" class="form-control" id="password"
                                 autocomplete="current-password" placeholder="Password" required>
-                            @error('password')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                             <span class="input-group-text bg-white border-0">
                                 <i class="bi bi-lock"></i>
                             </span>

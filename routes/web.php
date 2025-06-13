@@ -43,6 +43,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
+    Route::get('/dashboard/all/applicants', [DashboardController::class,'allApplicants'])->name('all.applicants');
+    Route::get('/dashboard/applicants/{appno}', [DashboardController::class,'editApplicant'])->name('applicant.edit');
+    Route::put('/dashboard/applicants/{appno}', [DashboardController::class,'updateApplicant'])->name('applicant.update');
     Route::get('/dashboard/applicant/{appno}', [DashboardController::class,'showApplication'])->name('applicant.show');
     Route::get('/dashboard/completed_applications', [DashboardController::class,'showCompletedApplications'])->name('completed.applications');
     Route::get('/dashboard/incomplete_applications', [DashboardController::class,'showIncompleteApplications'])->name('incomplete.applications');

@@ -38,7 +38,7 @@
                                             <div class="col-sm-4 mb-4">
                                                 <input class="form-control" type="file" name="credentials"
                                                     accept="application/pdf" required onchange="showPdfThumbnail(this)">
-                                                <small class="text-muted">Only PDF files allowed. Max size: 2MB.</small>
+                                                <small class="text-muted">Only PDF files allowed. Max size: 5MB.</small>
                                                 <div id="pdf-thumbnail" class="mt-2"></div>
                                             </div>
                                             <div>

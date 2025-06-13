@@ -160,7 +160,11 @@
         <p>Please click the link below to securely submit your reference:</p>
         <p style="text-align: center; margin-top: 25px; margin-bottom: 25px;">
             {{-- <a href="{{ route('referee.reference', ['applicant' => $applicant->id, 'referee' => $referee->id]) }}" class="button-link">Complete Reference</a> --}}
-            <a href="http://pg.bsum.edu.ng/referee-report/{{ $referee->id }}" class="button-link">Complete Reference</a>
+            <a href="http://pg.bsum.edu.ng/referee-report/{{ $referee->id }}" class="button-link">
+                <button class="btn btn-success">
+                    Complete Reference
+                </button>
+            </a>
         </p>
         
         <p>Your timely response is greatly appreciated.</p>

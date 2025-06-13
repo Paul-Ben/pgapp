@@ -95,7 +95,7 @@ class PgApplicationController extends Controller
             'faculty' => 'nullable|string|max:50',
             'department' => 'nullable|string|max:50',
             'sessions' => 'nullable|string|max:50',
-            'first_choice' => 'nullable|string|max:50',
+            'first_choice' => 'nullable|string|max:100',
 
         ]);
 
@@ -315,9 +315,24 @@ class PgApplicationController extends Controller
      */
     public function store_credential_passport(Request $request)
     {
+        // $request->validate([
+        //     'applicants_id' => 'required|exists:applicants,appno',
+        //     'credentials' => 'required|file|mimes:pdf|max:5120', // 2MB
+        //     'passport' => 'required|file|image|max:300', // 300KB
+        // ]);
         $request->validate([
             'applicants_id' => 'required|exists:applicants,appno',
-            'credentials' => 'required|file|mimes:pdf|max:2048', // 2MB
+            'credentials' => [
+                'required',
+                'file',
+                'mimes:pdf',
+                'max:5120', // 5MB in kilobytes (5 * 1024 = 5120)
+                function ($attribute, $value, $fail) {
+                    if ($value->getSize() > 5120 * 1024) { // 5MB in bytes (5120 * 1024)
+                        $fail('The credentials file must not exceed 5MB.');
+                    }
+                }
+            ],
             'passport' => 'required|file|image|max:300', // 300KB
         ]);
 
@@ -351,7 +366,7 @@ class PgApplicationController extends Controller
                 'passport' => $passportUrl,
                 'updated_at' => now(),
             ]);
-            return redirect()->route('referees.form', $applicantId)->with('success', 'Files uploaded  successfully.');
+        return redirect()->route('referees.form', $applicantId)->with('success', 'Files uploaded  successfully.');
         // return redirect()->back()->with('success', 'Files uploaded and applicant updated successfully.');
     }
 
@@ -437,20 +452,20 @@ class PgApplicationController extends Controller
     //             $passportUrl = Storage::url('passports/' . $passportName);
     //         }
     //         $applicant->fill([
-                // 'fullname' => $request->input('fullname'),
-                // 'sex' => $request->input('sex'),
-                // 'date_of_birth' => $request->input('date_of_birth'),
-                // 'phone_no' => $request->input('phone_no'),
-                // 'email_address' => $request->input('email_address'),
-                // 'country' => $request->input('country'),
-                // 'state_of_origin' => $request->input('state_of_origin'),
-                // 'lga' => $request->input('lga'),
-                // 'contact_address' => $request->input('contact_address'),
-                // 'passport' => $passportUrl ?? $applicant->passport,
-                // 'first_choice' => $request->input('first_choice'),
-                // 'qualification' => $request->input('qualification'),
-                // 'faculty' => $request->input('faculty'),
-                // 'department' => $request->input('department'),
+    // 'fullname' => $request->input('fullname'),
+    // 'sex' => $request->input('sex'),
+    // 'date_of_birth' => $request->input('date_of_birth'),
+    // 'phone_no' => $request->input('phone_no'),
+    // 'email_address' => $request->input('email_address'),
+    // 'country' => $request->input('country'),
+    // 'state_of_origin' => $request->input('state_of_origin'),
+    // 'lga' => $request->input('lga'),
+    // 'contact_address' => $request->input('contact_address'),
+    // 'passport' => $passportUrl ?? $applicant->passport,
+    // 'first_choice' => $request->input('first_choice'),
+    // 'qualification' => $request->input('qualification'),
+    // 'faculty' => $request->input('faculty'),
+    // 'department' => $request->input('department'),
     //         ]);
     //         $applicant->save();
     //         // Batch update institutions
@@ -596,7 +611,9 @@ class PgApplicationController extends Controller
                 if (!empty($referee->email_address)) {
                     try {
                         Mail::to($referee->email_address)->send(new RefereeNotificationMail($referee, $applicant));
-                        $referee->update(['mail_sent' => 1]);
+                        DB::table('applicantsreferees')
+                            ->where('id', $referee->id)
+                            ->update(['mail_sent' => 1]);
                         Log::info('Email sent to referee: ' . $referee->email_address);
                     } catch (\Exception $e) {
                         Log::error('Failed to send email to referee: ' . $e->getMessage());

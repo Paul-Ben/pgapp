@@ -26,10 +26,10 @@
                                     </div>
                                     
                                     <div class="button login button-1 text-center mt-4">
-                                        <a href="{{ url('/login') }}" class="btn btn-primary">
+                                        {{-- <a href="{{ url('/login') }}" class="btn btn-primary">
                                             <span>Return to Home</span>
                                             <i class="fas fa-home"></i>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </div>
                             </div>
