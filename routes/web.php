@@ -50,6 +50,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/completed_applications', [DashboardController::class,'showCompletedApplications'])->name('completed.applications');
     Route::get('/dashboard/incomplete_applications', [DashboardController::class,'showIncompleteApplications'])->name('incomplete.applications');
     Route::get('/admin/completed-applications/download', [DashboardController::class, 'downloadCompletedApplications'])->name('completed.applications.download');
+
+    // Faculty routes
+    Route::get('/dashboard/faculties', [ DashboardController::class, 'getFaculties'])->name('faculties');
+    Route::get('/dashboard/faculties/add', [DashboardController::class, 'addFacultyForm'])->name('faculty.add');
+    Route::post('/dashboard/faculties', [ DashboardController::class, 'storeFaculty'])->name('faculty.store');
+    Route::get('/dashboard/faculties/{faculty_id}', [ DashboardController::class, 'editFaculty'])->name('faculty.edit');
+    Route::put('/dashboard/faculties/{faculty}', [ DashboardController::class, 'updateFaculty'])->name('faculty.update');
+    Route::delete('/dashboard/faculties/{faculty}', [DashboardController::class, 'deleteFaculty'])->name('faculty.delete');
+
+    // Department routes
+    Route::get('/dashboard/departments', [ DashboardController::class, 'getDepartments'])->name('departments');
+    Route::get('/dashboard/departments/add', [DashboardController::class, 'addDepartmentForm'])->name('department.add');
+    Route::post('/dashboard/departments/store', [ DashboardController::class, 'storeDepartment'])->name('department.store');
+    Route::get('/dashboard/departments/{department_id}', [ DashboardController::class, 'editDepartment'])->name('department.edit');
+    Route::put('/dashboard/departments/{department}', [ DashboardController::class, 'updateDepartment'])->name('department.update');
+    Route::delete('/dashboard/departments/{department}', [DashboardController::class, 'deleteDepartment'])->name('department.delete');
+    Route::get('/dashboard/faculties/{faculty_id}/add-programme', [ DashboardController::class, 'addProgrammeForm'])->name('programme.add');
+
+    // Programme routes
+    Route::get('/dashboard/programmes', [ DashboardController::class, 'getProgrammes'])->name('programmes');
+    Route::get('/dashboard/programmes/add', [DashboardController::class, 'addProgrammeForm'])->name('programme.add');
+    Route::post('/dashboard/programmes', [ DashboardController::class, 'storeProgramme'])->name('programme.store');
+    Route::get('/dashboard/programmes/{programme_id}', [ DashboardController::class, 'editProgramme'])->name('programme.edit');
+    Route::put('/dashboard/programmes/{programme}', [ DashboardController::class, 'updateProgramme'])->name('programme.update');
+    Route::delete('/dashboard/programmes/{programme}', [DashboardController::class, 'deleteProgramme'])->name('programme.delete');
 });
 
 require __DIR__.'/auth.php';

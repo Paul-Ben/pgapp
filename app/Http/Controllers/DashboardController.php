@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Applicant;
 use App\Models\ApplicantInstitutionDetail;
 use App\Models\ApplicantsReferee;
+use App\Models\Department;
+use App\Models\Faculty;
+use App\Models\Programme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controller;
@@ -247,4 +250,214 @@ class DashboardController extends Controller
             'Content-Disposition' => "attachment; filename=\"$filename\"",
         ]);
     }
+
+    // Get all faculties
+    public function getFaculties()
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        $incompleteApplications = $this->incompleteApplications;
+        $faculties = DB::table('faculties')->get();
+        return view('admin.faculty.index', compact('faculties', 'authUser', 'applicaationcount', 'completedApplications', 'incompleteApplications'));
+    }
+
+    public function addFacultyForm()
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        return view('admin.faculty.create', compact('authUser', 'applicaationcount', 'completedApplications'));
+    }
+
+    public function storeFaculty(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+        ]);
+
+        DB::table('faculties')->insert([
+            'name' => $request->name,
+            'code' => $request->code,
+        ]);
+
+        return redirect()->route('faculties')->with('success', 'Faculty added successfully');
+    }
+
+    public function editFaculty($faculty_id)
+    {
+        $authUser = Auth::user();
+        $faculty = DB::table('faculties')->where('id', $faculty_id)->first();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        return view('admin.faculty.edit', compact('faculty', 'authUser', 'applicaationcount', 'completedApplications'));
+    }
+
+    public function updateFaculty(Request $request, Faculty $faculty)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+        ]);
+
+        $faculty->update([
+            'name' => $request->name,
+            'code' => $request->code,
+        ]);
+
+        return redirect()->route('faculties')->with('success', 'Faculty updated successfully');
+    }
+
+    public function deleteFaculty(Faculty $faculty)
+    {
+        $faculty->delete();
+        return redirect()->route('faculties')->with('success', 'Faculty deleted successfully');
+    }
+
+    public function getDepartments()
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        $incompleteApplications = $this->incompleteApplications;
+        $departments = Department::with('faculty')->get();
+        
+        return view('admin.department.index', compact('departments', 'authUser', 'applicaationcount', 'completedApplications', 'incompleteApplications'));
+    }
+
+    public function addDepartmentForm()
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        $faculties = DB::table('faculties')->get();
+        return view('admin.department.create', compact('authUser', 'applicaationcount', 'completedApplications', 'faculties'));
+    }
+
+    public function storeDepartment(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'faculty_id' => 'required',
+        ]);
+
+        DB::table('departments')->insert([
+            'name' => $request->name,
+            'code' => $request->code,
+            'faculty_id' => $request->faculty_id,
+        ]);
+
+        return redirect()->route('departments')->with('success', 'Department added successfully');
+    }
+
+    public function editDepartment($department_id)
+    {
+        $authUser = Auth::user();
+        $department = Department::with('faculty')->where('id', $department_id)->first();
+        $applicaationcount = $this->applicaationcount;
+        $incompleteApplications = $this->incompleteApplications;
+        $completedApplications = $this->completedApplications;
+        $faculties = DB::table('faculties')->get();
+        return view('admin.department.edit', compact('department', 'authUser', 'applicaationcount', 'completedApplications', 'faculties'));
+    }
+
+    public function updateDepartment(Request $request, Department $department)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'faculty_id' => 'required',
+        ]);
+
+        $department->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'faculty_id' => $request->faculty_id,
+        ]);
+
+        return redirect()->route('departments')->with('success', 'Department updated successfully');
+    }
+
+    public function deleteDepartment(Department $department)
+    {
+        $department->delete();
+        return redirect()->route('departments')->with('success', 'Department deleted successfully');
+    }
+
+    public function getProgrammes()
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        $incompleteApplications = $this->incompleteApplications;
+        $programmes = Programme::with('department.faculty')->get();
+        return view('admin.programmes.index', compact('programmes', 'authUser', 'applicaationcount', 'completedApplications', 'incompleteApplications'));
+    }
+
+    public function addProgrammeForm()
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        $incompleteApplications = $this->incompleteApplications;
+        $departments = DB::table('departments')->get();
+        $faculties = DB::table('faculties')->get();
+        return view('admin.programmes.create', compact('authUser', 'applicaationcount', 'completedApplications', 'incompleteApplications', 'departments', 'faculties'));
+    }
+
+    public function storeProgramme(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'department_id' => 'required',
+        ]);
+
+        DB::table('programmes')->insert([
+            'name' => $request->name,
+            'code' => $request->code,
+            'department_id' => $request->department_id,
+            'min_score' => 0,
+            'category' => 'POST GRADUATE',
+        ]);
+
+        return redirect()->route('programmes')->with('success', 'Programme added successfully');
+    }
+
+    public function editProgramme($programme_id)
+    {
+        $authUser = Auth::user();
+        $applicaationcount = $this->applicaationcount;
+        $completedApplications = $this->completedApplications;
+        $incompleteApplications = $this->incompleteApplications;
+        $departments = DB::table('departments')->get();
+        $programme = Programme::with('department.faculty')->where('id', $programme_id)->first();
+        return view('admin.programmes.edit', compact('authUser', 'applicaationcount', 'completedApplications', 'incompleteApplications' , 'programme', 'departments'));
+    }
+
+    public function updateProgramme(Request $request, Programme $programme)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required',
+            'department_id' => 'required',
+        ]);
+
+        $programme->update([
+            'name' => $request->name,
+            'code' => $request->code,
+            'department_id' => $request->department_id,
+        ]);
+
+        return redirect()->route('programmes')->with('success', 'Programme updated successfully');
+    }
+
+    public function deleteProgramme(Programme $programme)
+    {
+        $programme->delete();
+        return redirect()->route('programmes')->with('success', 'Programme deleted successfully');
+    }
+
 }

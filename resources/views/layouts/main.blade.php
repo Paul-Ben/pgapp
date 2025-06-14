@@ -308,7 +308,7 @@
                                 </li>
 
                                 <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                    <a class="sidebar-link sidebar-title " href="javascript:void(0)">
                                         <i data-feather="users"></i>
                                         <span>Applications</span>
                                     </a>
@@ -321,8 +321,25 @@
                                         </li>
                                     </ul>
                                 </li>
-
                                 <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                        <i data-feather="archive"></i>
+                                        <span>Manage Programmes</span>
+                                    </a>
+                                    <ul class="sidebar-submenu">
+                                        <li>
+                                            <a href="{{route('faculties')}}">Faculties</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{route('departments')}}">Departments</a>
+                                        </li>
+                                        <li>
+                                            <a href="{{route('programmes')}}">Programmes</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                {{-- <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="#">
                                         <i data-feather="users"></i>
                                         <span>Bio Data</span>
@@ -347,7 +364,7 @@
                                     </a>
                                 </li>
 
-                                {{-- <li class="sidebar-main-title sidebar-main-title-2">
+                                <li class="sidebar-main-title sidebar-main-title-2">
                                     <div>
                                         <h6 class="lan-1">Application</h6>
                                         <p class="lan-2">Ready To Use Apps</p>
