@@ -134,11 +134,20 @@
                                         <div class="mb-4 row align-items-center">
                                             <label class="form-label-title col-sm-2 mb-4">Course of Study</label>
                                             <div class="col-sm-4 mb-4">
-                                                <select name="first_choice" class="form-control" id="programme" required>
+                                                {{-- <select name="first_choice" class="form-control" id="programme" required>
                                                     <option value="" disabled selected>Select Program</option>
                                                     @foreach ($programmes as $programme)
-                                                        <option value="{{ $programme->name }}"
+                                                        <option value="{{ $programme->id }}"
                                                             {{ $applicant['first_choice'] == $programme->name ? 'selected' : '' }}>
+                                                            {{ $programme->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select> --}}
+                                                <select name="programme_id" class="form-control" id="programme" required>
+                                                    <option value="" disabled selected>Select Program</option>
+                                                    @foreach ($programmes as $programme)
+                                                        <option value="{{ $programme->id }}"
+                                                            {{ $applicant['first_choice'] == $programme->id ? 'selected' : '' }}>
                                                             {{ $programme->name }}
                                                         </option>
                                                     @endforeach
@@ -543,6 +552,11 @@
                 ];
                 populateCountries(staticCountries);
             }
+
+        //      const programmeSelect = document.getElementById('programme');
+        // if (programmeSelect.value) {
+        //     programmeSelect.dispatchEvent(new Event('change'));
+        // }
         });
         fetch('https://nga-states-lga.onrender.com/fetch')
             .then((res) => res.json())
@@ -574,24 +588,38 @@
                         x.add(option);
                     }
                 });
-            }
+        }
+       
+        document.getElementById('programme').addEventListener('change', function() {
+            const programmeId = this.value;
 
-            document.getElementById('programme').addEventListener('change', function() {
-            const programmeName = this.value;
-            if (programmeName) {
-                fetch(`/programme?name=${programmeName}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('department').value = data.department.name;
-                        document.getElementById('faculty').value = data.department.faculty.name;
-                    });
-            } else {
+            if (!programmeId) {
                 document.getElementById('department').value = '';
                 document.getElementById('faculty').value = '';
+                return;
             }
+
+            // Show loading state if needed
+            document.getElementById('department').value = 'Loading...';
+            document.getElementById('faculty').value = 'Loading...';
+
+            fetch(`/programme-details?programme_id=${programmeId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('department').value = data.department;
+                    document.getElementById('faculty').value = data.faculty;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('department').value = 'Error loading';
+                    document.getElementById('faculty').value = 'Error loading';
+                });
         });
     </script>
-    <script>
-    
-    </script>
+    <script></script>
 @endsection

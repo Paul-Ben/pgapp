@@ -13,7 +13,8 @@ Route::get('/', [PgApplicationController::class, 'verify'])->name('applicant.ver
 Route::get('/programme-info/{code}', [PgApplicationController::class, 'getProgrammeInfo']);
 Route::post('/applicant/verify', [PgApplicationController::class, 'verifyApplicant'])->name('applicant.verify.submit');
 Route::get('/applicant/{appno}', [PgApplicationController::class,'index'])->name('application.index');
-Route::get('/programme', [PgApplicationController::class, 'showByName']);
+// Route::get('/programme', [PgApplicationController::class, 'showByName']);
+Route::get('/programme-details', [PgApplicationController::class, 'getProgrammeDetails'])->name('programme.details');
 Route::put('/applicant/{appno}', [PgApplicationController::class,'update'])->name('application.update');
 Route::get('/referees/{appno}', [PgApplicationController::class, 'refreeDataForm'])->name('referees.form');
 Route::post('/referees', [PgApplicationController::class, 'store'])->name('referees.store');

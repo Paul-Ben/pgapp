@@ -57,15 +57,33 @@ class PgApplicationController extends Controller
         ]);
     }
 
-    public function showByName(Request $request)
+    public function getProgrammeDetails(Request $request)
     {
-        $programmeName = $request->query('name');
-        $programme = Programme::where('name', $programmeName)->with('department.faculty')->first();
+        $programmeId = $request->input('programme_id');
+        
+        $programme = Programme::with(['department.faculty'])->find($programmeId);
+        
         if (!$programme) {
-            return response()->json(['error' => 'Programme not found'], 404);
+            return response()->json([
+                'error' => 'Programme not found'
+            ], 404);
         }
-        return response()->json($programme);
+        
+        return response()->json([
+            'department' => $programme->department->name ?? '',
+            'faculty' => $programme->department->faculty->name ?? ''
+        ]);
     }
+
+    // public function showByName(Request $request)
+    // {
+    //     $programmeName = $request->query('name');
+    //     $programme = Programme::where('name', $programmeName)->with('department.faculty')->first();
+    //     if (!$programme) {
+    //         return response()->json(['error' => 'Programme not found'], 404);
+    //     }
+    //     return response()->json($programme);
+    // }
 
     /**
      * Update the applicant's information.
@@ -95,14 +113,15 @@ class PgApplicationController extends Controller
             'faculty' => 'nullable|string|max:50',
             'department' => 'nullable|string|max:50',
             'sessions' => 'nullable|string|max:50',
-            'first_choice' => 'nullable|string|max:100',
+           'programme_id' => 'required|exists:programmes,id',
 
         ]);
 
-
+        $first_choice = Programme::find($validated['programme_id']);
         // Update the applicant's information
         $applicant->update($validated);
         $applicant->update([
+            'first_choice' => $first_choice->name,
             'date_initiated' => now(),
             'refereers_needed' => 2, // Reset referees needed count
             'status' => 'In Progress', // Set status to In Progress
@@ -697,9 +716,11 @@ class PgApplicationController extends Controller
                 'Content-Type' => 'application/json',
             ])
                 ->timeout(30) // 30 second timeout
-                ->post('https://portal.bsum.edu.ng/application/Application', [
+                ->get('https://portal.bsum.edu.ng/application/Application', [
                     'matno' => $validated['matno']
                 ]);
+
+                dd($response);
 
             // Check if request was successful
             if ($response->successful()) {

@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('status', 20)->nullable();
             $table->string('qualification', 20)->nullable();
             $table->string('sessions', 10)->nullable();
+            $table->foreignId('programme_id')->constrained('programmes')->onDelete('cascade');
             $table->string('refereers_needed')->default(2);
             $table->boolean('ref_completion_status')->default(false);
             $table->string('first_choice', 45)->nullable();

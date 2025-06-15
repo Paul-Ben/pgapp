@@ -16,7 +16,7 @@ class ApplicantsTableSeeder extends Seeder
     {
         DB::table('applicants')->insert([
             [
-                'appno' => Str::random(10),
+                'appno' => 'S00200000326',
                 'application_type' => 'Postgraduate',
                 'school_id' => 'SCH01',
                 'fullname' => 'John Doe',
@@ -39,6 +39,7 @@ class ApplicantsTableSeeder extends Seeder
                 'refereers_needed' => 2,
                 'ref_completion_status' => false,
                 'first_choice' => 'CS',
+                'programme_id' => 1,
                 'department' => 'IT',
                 'faculty' => 'pass',
                 'next_stage' => 1,
@@ -46,7 +47,7 @@ class ApplicantsTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'appno' => Str::random(10),
+                'appno' => 'S00200000349',
                 'application_type' => 'Postgraduate',
                 'school_id' => 'SCH02',
                 'fullname' => 'Jane Smith',
@@ -69,6 +70,7 @@ class ApplicantsTableSeeder extends Seeder
                 'refereers_needed' => 2,
                 'ref_completion_status' => false,
                 'first_choice' => 'MBA',
+                'programme_id' => 2,
                 'department' => 'Finance',
                 'faculty' => 'pass',
                 'next_stage' => 2,
