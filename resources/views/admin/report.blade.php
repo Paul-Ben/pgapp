@@ -46,7 +46,7 @@
             <button class="btn btn-danger" id="download-pdf-btn">
                 <i class="fa fa-file-pdf-o"></i> Download PDF
             </button>
-            <a href="{{ url()->previous() }}">
+            <a href="{{ route('dashboard') }}">
                 <button class="btn btn-info" id="back-btn">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>

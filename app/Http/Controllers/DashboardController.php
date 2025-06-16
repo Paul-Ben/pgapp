@@ -74,7 +74,7 @@ class DashboardController extends Controller
             ->get();
 
         $programmes = DB::table('programmes')
-            ->select('name', 'code')
+            ->select('id', 'name', 'code')
             ->get();
         $faculties = DB::table('faculties')
             ->select('name', 'code')
@@ -107,7 +107,7 @@ class DashboardController extends Controller
                 $passportFile->storeAs('passports', $passportName, 'public');
                 $passportUrl = Storage::url('passports/' . $passportName);
             }
-
+            $first_choice = Programme::where('id', $request->input('programme_id'))->first();
             $applicant->update([
                 'fullname' => $request->input('fullname'),
                 'sex' => $request->input('sex'),
@@ -119,10 +119,11 @@ class DashboardController extends Controller
                 'lga' => $request->input('lga'),
                 'contact_address' => $request->input('contact_address'),
                 'passport' => $passportUrl ?? $applicant->passport,
-                'first_choice' => $request->input('first_choice'),
+                'first_choice' => $first_choice->name,
                 'qualification' => $request->input('qualification'),
                 'faculty' => $request->input('faculty'),
                 'department' => $request->input('department'),
+                'programme_id' => $request->input('programme_id'),
             ]);
 
             // Handle institutions
@@ -154,7 +155,7 @@ class DashboardController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('report.view', $appno)
+            return redirect()->route('applicant.show', $appno)
                 ->with('success', 'Application status updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -164,12 +165,20 @@ class DashboardController extends Controller
 
    
 
-    public function showApplication($applicant)
+    public function showApplication($appno)
     {
-        $applicant = Applicant::with('ApplicantInstitutionDetails')
-            ->with('ApplicantsReferees')
-            ->findOrFail($applicant);
-        return view('admin.report', compact('applicant'));
+        $applicant = DB::table('applicants')
+            ->where('appno', $appno)
+            ->first();
+
+        $institutionDetails = DB::table('applicant_institution_details')
+            ->where('applicants_id', $appno)
+            ->get();
+
+        $referees = DB::table('applicantsreferees')
+            ->where('applicants_id', $appno)
+            ->get();
+        return view('admin.report', compact('applicant' , 'institutionDetails', 'referees'));
     }
 
     public function showCompletedApplications()

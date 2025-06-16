@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/completed_applications', [DashboardController::class,'showCompletedApplications'])->name('completed.applications');
     Route::get('/dashboard/incomplete_applications', [DashboardController::class,'showIncompleteApplications'])->name('incomplete.applications');
     Route::get('/admin/completed-applications/download', [DashboardController::class, 'downloadCompletedApplications'])->name('completed.applications.download');
+    Route::get('/dashboard/applicant/report/{appno}', [DashboardController::class, 'showReport'])->name('report_view');
 
     // Faculty routes
     Route::get('/dashboard/faculties', [ DashboardController::class, 'getFaculties'])->name('faculties');

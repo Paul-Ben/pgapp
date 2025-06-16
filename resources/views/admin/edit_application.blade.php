@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
-    <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
     <title>PG Application</title>
     <link rel="stylesheet" href="{{ asset('report/style.css') }}">
     <!-- Bootstrap CSS -->
@@ -121,7 +121,8 @@
                     </div> --}}
                     <div class="detail-item nigeriaFields">
                         <span class="detail-label">State:</span>
-                        <select name="state_of_origin" id="state" class="form-control" onchange="selectLGA(this)">
+                        <select name="state_of_origin" id="state" class="form-control"
+                            onchange="selectLGA(this)">
                             <option value="">Select State</option>
                             <option value="Other">Other</option>
                             @if ($applicant->state_of_origin)
@@ -131,10 +132,6 @@
                             <!-- States will be dynamically populated by JS -->
                         </select>
                     </div>
-                    {{-- <div class="detail-item">
-                        <span class="detail-label">LGA:</span>
-                        <input type="text" name="lga" value="{{ $applicant->lga }}" class="form-control">
-                    </div> --}}
                     <div class="detail-item">
                         <span class="detail-label">LGA:</span>
                         <select name="lga" id="lga" class="form-control">
@@ -158,36 +155,49 @@
                 <div class="details-grid course-details-grid">
                     <div class="detail-item">
                         <span class="detail-label">Course Applied:</span>
-                        {{-- <input type="text" name="course_applied" value="Computer Science" class="form-control"> --}}
-                        <select name="first_choice" class="form-control" id="">
+                        {{-- <select name="first_choice" class="form-control" id="">
                             <option value="{{ $applicant->first_choice }}" selected>{{ $applicant->first_choice }}</option>
-                            @foreach ($programmes as  $programme  )
+                            @foreach ($programmes as $programme)
                                 <option value="{{ $programme->name }}">{{ $programme->name }}</option>
                                 
+                            @endforeach
+                        </select> --}}
+                        <select name="programme_id" class="form-control" id="programme" required>
+                            <option value="{{ $applicant->programme_id }}" selected>{{ $applicant->first_choice }}
+                            </option>
+                            @foreach ($programmes as $programme)
+                                <option value="{{ $programme->id }}">
+                                    {{ $programme->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Department:</span>
-                        <select name="department" class="form-control">
+                        <input type="text" name="department" id="department" value="{{ $applicant->department ?? '' }}"
+                            class="form-control" readonly>
+                        {{-- <select name="department" class="form-control">
                             <option value="{{ $applicant->department }}" selected>{{ $applicant->department }}</option>
                             @foreach ($departments as $department)
                                 <option value="{{ $department->name }}">{{ $department->name }}</option>
                             @endforeach
-                        </select>
+                        </select> --}}
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Faculty:</span>
-                        <select name="faculty" class="form-control">
+                        <input type="text" name="faculty" id="faculty" value="{{ $applicant->faculty ?? '' }}" class="form-control"
+                            readonly>
+                        {{-- <select name="faculty" class="form-control">
                             <option value="{{ $applicant->faculty }}" selected>{{ $applicant->faculty }}</option>
                             @foreach ($faculties as $faculty)
                                 <option value="{{ $faculty->name }}">{{ $faculty->name }}</option>
                             @endforeach
-                        </select>
+                        </select> --}}
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Session:</span>
-                        <input type="text" name="sessions" value="{{$applicant->sessions}}" class="form-control" readonly>
+                        <input type="text" name="sessions" value="{{ $applicant->sessions }}"
+                            class="form-control" readonly>
                     </div>
                     <div class="detail-item">
                         <span class="detail-label">Highest Qualification:</span>
@@ -287,7 +297,7 @@
                 </div>
 
             </section>
-           
+
 
             <footer class="mt-4">
                 <p>&copy; 2024 MOAUM. All rights reserved.</p>
@@ -304,6 +314,37 @@
         document.addEventListener('DOMContentLoaded', function() {
             var presubmissionModal = new bootstrap.Modal(document.getElementById('presubmissionModal'));
             presubmissionModal.show();
+
+            document.getElementById('programme').addEventListener('change', function() {
+                const programmeId = this.value;
+
+                if (!programmeId) {
+                    document.getElementById('department').value = '';
+                    document.getElementById('faculty').value = '';
+                    return;
+                }
+
+                // Show loading state if needed
+                document.getElementById('department').value = 'Loading...';
+                document.getElementById('faculty').value = 'Loading...';
+
+                fetch(`/programme-details?programme_id=${programmeId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('department').value = data.department;
+                        document.getElementById('faculty').value = data.faculty;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('department').value = 'Error loading';
+                        document.getElementById('faculty').value = 'Error loading';
+                    });
+            });
         });
 
         // ...rest of your JS code...
@@ -429,7 +470,7 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
+
             // Fetch the list of countries from the API
             fetch('https://restcountries.com/v3.1/all') // Example API
                 .then(response => response.json())
