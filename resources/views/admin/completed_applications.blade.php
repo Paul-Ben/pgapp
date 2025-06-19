@@ -516,8 +516,13 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a href="javascript:void(0)">
-                                                            <span class="lnr lnr-pencil"></span>
+                                                        <a href="{{route('applicant.edit', $applicant)}}">
+                                                        <span class="lnr lnr-pencil"></span>
+                                                    </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ $applicant->credentials }}" target="_blank">
+                                                            <span class="lnr lnr-download"></span>
                                                         </a>
                                                     </li>
                                                     <li>
