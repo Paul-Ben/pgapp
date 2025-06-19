@@ -22,7 +22,8 @@
                                     <div class="alert alert-info mx-auto" style="max-width: 600px;">
                                         <p><strong>Application Number:</strong> {{ $applicant->appno }}</p>
                                         <p><strong>Applicant Name:</strong> {{ $applicant->fullname }}</p>
-                                        <p><strong>Date Submitted:</strong> {{ $applicant->updated_at->format('F j, Y \a\t g:i a') }}</p>
+                                        {{-- <p><strong>Date Submitted:</strong> {{ $applicant->updated_at->format('F j, Y \a\t g:i a') }}</p> --}}
+                                        <p><strong>Date Submitted:</strong> {{ \Carbon\Carbon::parse($applicant->updated_at)->format('F j, Y \a\t g:i a') }}</p>
                                     </div>
                                     
                                     <div class="button login button-1 text-center mt-4">

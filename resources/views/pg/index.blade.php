@@ -189,6 +189,9 @@
                                                     <option value="First Degree"
                                                         {{ $applicant['qualification'] == 'First Degree' ? 'selected' : '' }}>
                                                         First Degree</option>
+                                                    <option value="Masters"
+                                                        {{ $applicant['qualification'] == 'Masters' ? 'selected' : '' }}>
+                                                        Masters</option>
                                                     <option value="PGD)"
                                                         {{ $applicant['qualification'] == 'PGD' ? 'selected' : '' }}>
                                                         PGD</option>
@@ -553,10 +556,10 @@
                 populateCountries(staticCountries);
             }
 
-        //      const programmeSelect = document.getElementById('programme');
-        // if (programmeSelect.value) {
-        //     programmeSelect.dispatchEvent(new Event('change'));
-        // }
+            //      const programmeSelect = document.getElementById('programme');
+            // if (programmeSelect.value) {
+            //     programmeSelect.dispatchEvent(new Event('change'));
+            // }
         });
         fetch('https://nga-states-lga.onrender.com/fetch')
             .then((res) => res.json())
@@ -589,7 +592,7 @@
                     }
                 });
         }
-       
+
         document.getElementById('programme').addEventListener('change', function() {
             const programmeId = this.value;
 

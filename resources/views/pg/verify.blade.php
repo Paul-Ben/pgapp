@@ -288,15 +288,15 @@
                     <div class="mb-3">
                         <label for="matno" class="form-label visually-hidden">PG Number</label>
                         <div class="input-group">
+                            {{-- <input type="text" name="matno" value="{{ old('matno') }}" class="form-control"
+                                id="matno" placeholder="S00200000001" pattern="^S\d{11}$" required autocomplete="username" autofocus> --}}
                             <input type="text" name="matno" value="{{ old('matno') }}" class="form-control"
-                                id="matno" placeholder="PG1234567" pattern="^S\d{11}$" required autocomplete="username" autofocus>
-                           
+                                id="matno" placeholder="S00200000001" pattern="^S002\d{8}$" required
+                                autocomplete="username" autofocus>
+
                             <span class="input-group-text bg-white border-0">
                                 <i class="bi bi-envelope"></i>
                             </span>
-                             @error('matno')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </div>
                     </div>
 
