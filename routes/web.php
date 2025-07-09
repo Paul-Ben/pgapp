@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PgApplicationController;
+use App\Http\Controllers\SuperadminController;
+use App\Http\Controllers\SupportController;
 
 // Route::get('/', function () {
 //     return view('auth.login');
@@ -34,15 +37,26 @@ Route::get('/applicant-report/{applicant_id}', [PgApplicationController::class, 
 Route::get('/pre_submission/{applicant_id}',   [PgApplicationController::class, 'presubmission'])->name('presubmission');
 Route::put('/pre_submission/{applicant_id}/submit', [PgApplicationController::class, 'updatePresubmission'])->name('presubmission.update');
 
+// Complaint routes
+Route::get('/complaints', [ComplaintController::class, 'index'])->name('complaints.index');
+Route::get('/complaints/create', [ComplaintController::class, 'create'])->name('complaints.create');
+Route::post('/complaints', [ComplaintController::class, 'store'])->name('complaints.store');
+Route::get('/complaints/{complaint}/success', [ComplaintController::class, 'success'])->name('complaints.success');
+
+// Ticket status check routes
+Route::get('/check-status', [ComplaintController::class, 'showCheckStatus'])->name('complaints.show-status');
+Route::post('/check-status', [ComplaintController::class, 'checkStatus'])->name('complaints.check-status');
+
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+});
+Route::middleware(['auth', 'role:PG Admin'])->group(function () {
+   
     Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
     Route::get('/dashboard/all/applicants', [DashboardController::class,'allApplicants'])->name('all.applicants');
     Route::get('/dashboard/applicants/{appno}', [DashboardController::class,'editApplicant'])->name('applicant.edit');
@@ -77,6 +91,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/programmes/{programme_id}', [ DashboardController::class, 'editProgramme'])->name('programme.edit');
     Route::put('/dashboard/programmes/{programme}', [ DashboardController::class, 'updateProgramme'])->name('programme.update');
     Route::delete('/dashboard/programmes/{programme}', [DashboardController::class, 'deleteProgramme'])->name('programme.delete');
+});
+
+// Superadmin dashboard routes
+Route::middleware(['auth', 'role:Superadmin'])->group(function () {
+    Route::get('/superadmin/dashboard', [SuperadminController::class,'dashboard'])->name('superadmin.dashboard');
+     Route::get('/superadmin/dashboard', [SuperadminController::class, 'index'])->name('superadmin.dashboard');
+        Route::post('/superadmin/users', [SuperadminController::class, 'store'])->name('superadmin.users.store');
+        Route::put('/superadmin/users/{user}', [SuperadminController::class, 'update'])->name('superadmin.users.update');
+        Route::delete('/superadmin/users/{user}', [SuperadminController::class, 'destroy'])->name('superadmin.users.destroy');
+});
+
+// Support admin dashboard routes
+Route::middleware(['auth', 'role:Support Admin'])->group(function () {
+    Route::get('/support/dashboard', [SupportController::class,'dashboard'])->name('support.dashboard');
+    Route::patch('/complaints/{complaint}/status', [ComplaintController::class, 'updateStatus'])
+        ->name('complaints.update-status');
+    Route::get('complaint/{complaint}/show', [ComplaintController::class,'show'])->name('show.complaint');
 });
 
 require __DIR__.'/auth.php';

@@ -6,60 +6,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Voxo admin is super flexible, powerful, clean &amp; modern responsive bootstrap 5 admin template with unlimited possibilities.">
+        content="MOAUM Students complaints application.">
     <meta name="keywords"
-        content="admin template, Voxo admin template, dashboard template, flat admin template, responsive admin template, web app">
+        content="complaints, students, registration, payments, MOAUM,">
     <meta name="author" content="pixelstrap">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_i0/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
-    <title>PG Applications</title>
-
+    {{-- <link rel="icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('assets/images/favicon.png')}}" type="image/x-icon"> --}}
+    <title>Student Complaints</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('favicon_io/apple-touch-icon.png')}}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
+    <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
     <!-- Google font-->
     <link
         href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200&family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
 
     <!-- Fontawesome css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/font-awesome.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/font-awesome.css')}}">
 
     <!-- Linear Icon -->
     <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 
     <!-- Themify icon css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/themify.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/themify.css')}}">
 
     <!-- Feather icon css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/feather-icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/feather-icon.css')}}">
 
     <!-- Plugins css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/scrollbar.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/animate.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/scrollbar.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/animate.css')}}">
 
     <!-- Bootstrap css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/vendors/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/vendors/bootstrap.css')}}">
 
     <!-- App css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
 
     <!-- Responsive css -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
-    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" />
-    <style>
-        /* Additional styling to ensure proper display */
-        .dt-buttons {
-            margin-bottom: 15px;
-        }
-        .dataTables_filter {
-            float: right;
-            margin-bottom: 15px;
-        }
-        .dataTables_length {
-            margin-bottom: 15px;
-        }
-    </style> --}}
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/css/responsive.css')}}">
 </head>
 
 <body>
@@ -76,8 +62,8 @@
             <div class="header-wrapper row m-0">
                 <div class="header-logo-wrapper col-auto p-0">
                     <div class="logo-wrapper"><a href="index.html">
-                            <img class="img-fluid main-logo" src="assets/images/logo/logo.png" alt="logo">
-                            <img class="img-fluid white-logo" src="assets/images/logo/logo-white.png" alt="logo">
+                            <img class="img-fluid main-logo" src="{{asset('BSULOGO3.png')}}" alt="logo">
+                            <img class="img-fluid white-logo" src="{{asset('BSULOGO3.png')}}" alt="logo">
                         </a>
                     </div>
 
@@ -103,12 +89,12 @@
                 </form>
                 <div class="nav-right col-4 pull-right right-header p-0">
                     <ul class="nav-menus">
-                        <li>
+                        {{-- <li>
                             <span class="header-search">
                                 <span class="lnr lnr-magnifier"></span>
                             </span>
                         </li>
-                        {{-- <li class="onhover-dropdown">
+                        <li class="onhover-dropdown">
                             <div class="notification-box">
                                 <span class="lnr lnr-alarm"></span>
                                 <span class="badge rounded-pill badge-theme">4</span>
@@ -148,7 +134,7 @@
                                     <a class="btn btn-primary" href="javascript:void(0)">Check all notification</a>
                                 </li>
                             </ul>
-                        </li> --}}
+                        </li>
 
                         <li>
                             <div class="mode">
@@ -156,7 +142,7 @@
                             </div>
                         </li>
 
-                        {{-- <li class="onhover-dropdown">
+                        <li class="onhover-dropdown">
                             <span class="lnr lnr-bubble"></span>
                             <ul class="chat-dropdown onhover-show-div">
                                 <li>
@@ -203,23 +189,23 @@
                                     <a class="btn btn-primary" href="javascript:void(0)">View All</a>
                                 </li>
                             </ul>
-                        </li> --}}
+                        </li>
                         <li class="maximize">
                             <a class="text-dark" href="javascript:void(0)" onclick="javascript:toggleFullScreen()">
                                 <span class="lnr lnr-frame-expand"></span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="profile-nav onhover-dropdown pe-0 me-0">
                             <div class="media profile-media">
-                                <img class="user-profile rounded-circle" src="{{ asset('BSULOGO3.png') }}"
-                                    alt="profile-picture">
-                                <div class="user-name-hide media-body">
-                                    <span>{{ Auth::user()->name }}</span>
+                                <img class="user-profile rounded-circle" src="{{asset('BSULOGO3.png')}}"
+                                    alt="profile-picture" width="50px" height="50px">
+                                {{-- <div class="user-name-hide media-body">
+                                    <span>Emay Walter</span>
                                     <p class="mb-0 font-roboto">Admin <i class="middle fa fa-angle-down"></i></p>
-                                </div>
+                                </div> --}}
                             </div>
                             <ul class="profile-dropdown onhover-show-div">
-                                {{-- <li>
+                                <li>
                                     <a href="all-users.html">
                                         <i data-feather="users"></i>
                                         <span>Users</span>
@@ -236,9 +222,9 @@
                                         <i data-feather="phone"></i>
                                         <span>Spports Tickets</span>
                                     </a>
-                                </li> --}}
+                                </li>
                                 <li>
-                                    <a href="{{ route('profile.edit') }}">
+                                    <a href="profile-setting.html">
                                         <i data-feather="settings"></i>
                                         <span>Settings</span>
                                     </a>
@@ -247,13 +233,7 @@
                                     <a data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                                         href="javascript:void(0)">
                                         <i data-feather="log-out"></i>
-                                        <span>
-                                            <form id="logoutForm" action="{{ route('logout') }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-link p-0 m-0 align-baseline"
-                                                    style="text-decoration: none;">Logout</button>
-                                            </form>
-                                        </span>
+                                        <span>Log out</span>
                                     </a>
                                 </li>
                             </ul>
@@ -271,8 +251,7 @@
                 <div>
                     <div class="logo-wrapper logo-wrapper-center">
                         <a href="index.html" data-bs-original-title="" title="">
-                            <img class="img-fluid for-dark" src="{{ asset('BSULOGO3.png') }}" width="40"
-                                height="40" alt="">
+                            <img class="img-fluid for-dark" src="{{asset('BSULOGO3.png')}}" alt="" width="100px" height="100px">
                         </a>
                         <div class="back-btn">
                             <i class="fa fa-angle-left"></i>
@@ -282,8 +261,8 @@
                         </div>
                     </div>
                     <div class="logo-icon-wrapper">
-                        <a href="{{ route('dashboard') }}" data-bs-original-title="" title="">
-                            {{-- <img class="img-fluid main-logo" src="{{asset('BSULOGO3.png')}}" width="10" height="10" alt="logo"> --}}
+                        <a href="index.html">
+                            <img class="img-fluid main-logo" src="assets/images/logo/logo.png" alt="logo">
                         </a>
                     </div>
                     <nav class="sidebar-main">
@@ -294,60 +273,42 @@
                         <div id="sidebar-menu">
                             <ul class="sidebar-links" id="simple-bar">
                                 <li class="back-btn"></li>
-                                @role('PG Admin')
-                                    <li class="sidebar-main-title sidebar-main-title-3">
-                                        <div>
-                                            <h6 class="lan-1">General</h6>
-                                            <p class="lan-2">Applications.</p>
-                                        </div>
-                                    </li>
+                                <li class="sidebar-main-title sidebar-main-title-3">
+                                    <div>
+                                        <h6 class="lan-1">General</h6>
+                                        <p class="lan-2">Applications.</p>
+                                    </div>
+                                </li>
 
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title link-nav" href="{{ route('dashboard') }}">
-                                            <i data-feather="home"></i>
-                                            <span>Dashboard</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title " href="javascript:void(0)">
-                                            <i data-feather="users"></i>
-                                            <span>Applications</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="{{ route('all.applicants') }}">All Applications</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('completed.applications') }}">Completed Applications</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="sidebar-list">
-                                        <a class="sidebar-link sidebar-title" href="javascript:void(0)">
-                                            <i data-feather="archive"></i>
-                                            <span>Manage Programmes</span>
-                                        </a>
-                                        <ul class="sidebar-submenu">
-                                            <li>
-                                                <a href="{{ route('faculties') }}">Faculties</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('departments') }}">Departments</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ route('programmes') }}">Programmes</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                @endrole
-                                {{-- <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav" href="#">
-                                        <i data-feather="users"></i>
-                                        <span>Bio Data</span>
+                                <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title link-nav" href="{{route('complaints.index')}}">
+                                        <i data-feather="home"></i>
+                                        <span>Dashboard</span>
                                     </a>
                                 </li>
+
+                                {{-- <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title" href="javascript:void(0)">
+                                        <i data-feather="users"></i>
+                                        <span>Users</span>
+                                    </a>
+                                    <ul class="sidebar-submenu">
+                                        <li>
+                                            <a href="all-users.html">All users</a>
+                                        </li>
+                                        <li>
+                                            <a href="add-new-user.html">Add new user</a>
+                                        </li>
+                                    </ul>
+                                </li> --}}
+
                                 <li class="sidebar-list">
+                                    <a class="sidebar-link sidebar-title link-nav" href="{{route('complaints.show-status')}}">
+                                        <i data-feather="users"></i>
+                                        <span>Check Ticket Status</span>
+                                    </a>
+                                </li>
+                                {{-- <li class="sidebar-list">
                                     <a class="sidebar-link sidebar-title link-nav" href="#">
                                         <i data-feather="star"></i>
                                         <span>Referee info</span>
@@ -364,9 +325,9 @@
                                         <i data-feather="file-text"></i>
                                         <span>Report</span>
                                     </a>
-                                </li>
+                                </li> --}}
 
-                                <li class="sidebar-main-title sidebar-main-title-2">
+                                {{-- <li class="sidebar-main-title sidebar-main-title-2">
                                     <div>
                                         <h6 class="lan-1">Application</h6>
                                         <p class="lan-2">Ready To Use Apps</p>
@@ -1085,7 +1046,7 @@
                         </div>
                     </footer>
                 </div>
-            </div>
+            </div> 
             <!-- Order section End -->
         </div>
         <!-- Page Body End-->
@@ -1095,16 +1056,15 @@
     <!-- Modal start -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog  modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
                     <h5 class="modal-title" id="staticBackdropLabel">Logging Out</h5>
                     <p>Are you sure you want to log out?</p>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="button-box">
-                        <button type="button" class="btn btn--no" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn--yes btn-primary"
-                            onclick="document.getElementById('logoutForm').submit()">Yes</button>
+                        <button type="button" class="btn btn--no " data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn  btn--yes btn-primary">Yes</button>
                     </div>
                 </div>
             </div>
@@ -1113,46 +1073,36 @@
     <!-- Modal end -->
 
     <!-- latest js -->
-    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{asset('assets/js/jquery-3.6.0.min.js')}}"></script>
 
     <!-- Bootstrap js -->
-    <script src="{{ asset('assets/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{asset('assets/js/bootstrap/bootstrap.bundle.min.js')}}"></script>
 
     <!-- feather icon js -->
-    <script src="{{ asset('assets/js/icons/feather-icon/feather.min.js') }}"></script>
-    <script src="{{ asset('assets/js/icons/feather-icon/feather-icon.js') }}"></script>
+    <script src="{{asset('assets/js/icons/feather-icon/feather.min.js')}}"></script>
+    <script src="{{asset('assets/js/icons/feather-icon/feather-icon.js')}}"></script>
 
     <!-- customizer js -->
-    <script src="{{ asset('assets/js/customizer.js') }}"></script>
+    <script src="{{asset('assets/js/customizer.js')}}"></script>
 
     <!-- scrollbar simplebar js -->
-    <script src="{{ asset('assets/js/scrollbar/simplebar.js') }}"></script>
-    <script src="{{ asset('assets/js/scrollbar/custom.js') }}"></script>
+    <script src="{{asset('assets/js/scrollbar/simplebar.js')}}"></script>
+    <script src="{{asset('assets/js/scrollbar/custom.js')}}"></script>
 
     <!-- Sidebar js -->
-    <script src="{{ asset('assets/js/config.js') }}"></script>
+    <script src="{{asset('assets/js/config.js')}}"></script>
 
     <!-- Plugins js -->
-    <script src="{{ asset('assets/js/sidebar-menu.js') }}"></script>
-    <script src="{{ asset('assets/js/notify/bootstrap-notify.min.js') }}"></script>
-    <script src="{{ asset('assets/js/notify/index.js') }}"></script>
+    <script src="{{asset('assets/js/sidebar-menu.js')}}"></script>
+    <script src="{{asset('assets/js/notify/bootstrap-notify.min.js')}}"></script>
+    <script src="{{asset('assets/js/notify/index.js')}}"></script>
 
     <!-- all checkbox select js -->
-    <script src="{{ asset('assets/js/checkbox-all-check.js') }}"></script>
+    <script src="{{asset('assets/js/checkbox-all-check.js')}}"></script>
 
     <!-- Theme js -->
-    <script src="{{ asset('assets/js/script.js') }}"></script>
-
-    <!-- jQuery and DataTables JS -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
+    <script src="{{asset('assets/js/script.js')}}"></script>
+   
 </body>
 
 </html>
